@@ -17,10 +17,26 @@ import GameBoard from './components/GameBoard';
 const socket = socketIOClient('localhost:4000');
 
 class App extends Component {
+  state = {
+    // Table state manages the cards and bet information for the game 
+    tableState: {
+      tableCards: [],
+      tablePot: 0,
+      currentBet: 0,
+    }
+  };
+
   componentDidMount() {
     // Socket connection test
     socket.on('welcome', (message) => {
       console.log(message.text);
+      this.setState({
+        tableState: {
+          tableCards: [1],
+          tablePot: 10,
+          currentBet: 10
+        }
+      });
     });
   }
 
@@ -28,7 +44,7 @@ class App extends Component {
     return (
       <div className="container-fluid">
         <StatusBar status="Poker"></StatusBar>
-        <GameBoard></GameBoard>
+        <GameBoard tableState={this.state.tableState}></GameBoard>
       </div>      
     );
   }

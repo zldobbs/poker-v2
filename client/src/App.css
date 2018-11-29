@@ -8,3 +8,7 @@
 .game-board {
   width: 80vw;
 }
+
+#cardDisplay {
+  min-height: 20vh;
+}
