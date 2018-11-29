@@ -6,19 +6,21 @@
     Online poker application developed with the MERN stack.
     This is the second attempt at making an online poker game.
     The first attempt utilized Vue, see here: https://github.com/zldobbs/Poker
+
+    Entry point for backend here. Handle routing and communications from the client. 
 */
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const server = app.listen(4000);
+const io = require('socket.io')(server, {origins: 'http://localhost:3000'});
 
 // Socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
-
+    socket.emit('welcome', {text: 'Connected to server'});
     // Handle user disconnections 
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
