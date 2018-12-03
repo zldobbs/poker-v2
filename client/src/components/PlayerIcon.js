@@ -10,10 +10,21 @@
 import React, { Component } from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
 
+// Image imports. Only using default picture at the moment. 
+const profileImageURL = require('../assets/img/blank-profile-picture.png');
+
+// Pass into icon the player's cards, 
 class PlayerIcon extends Component {
     render() {
         return(
-            <span></span>
+            <div className="col s6 m2">
+                <div className="player-icon">
+                    <p className="player-username">{this.props.player.username}</p>
+                    <img className="player-profile-pic" src={profileImageURL} alt="profile-pic" />
+                    <p>Bank: ${this.props.player.totalMoney}</p>
+                    <p>Bet: ${this.props.player.currentBet}</p>
+                </div>
+            </div> 
         );
     }
 }

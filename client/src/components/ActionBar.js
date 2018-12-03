@@ -18,7 +18,19 @@ import 'materialize-css/dist/css/materialize.min.css';
 class ActionBar extends Component {
     render() {
         return(
-            <span></span>
+            <div className="col s6 m9">
+                <div className="row">
+                    <div className="col s12 m3">
+                        <button className="btn waves-effect action-btn">Fold</button>
+                    </div>
+                    <div className="col s12 m3">
+                        <button className="btn waves-effect action-btn">Check</button>
+                    </div>
+                    <div className="col s12 m3">
+                        <button className="btn waves-effect action-btn">Bet</button>
+                    </div>
+                </div>
+            </div>
         );
     }
 }

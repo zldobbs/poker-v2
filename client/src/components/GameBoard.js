@@ -20,11 +20,11 @@ class GameBoard extends Component {
             // (i.e. not all cards need to be defined. If 0 is defined, 0-2 should all be defined)
             tableCards = (
                 <div>
-                    <Card id="card1" cardNum={this.props.tableState.tableCards[0]}></Card>
-                    <Card id="card2" cardNum={this.props.tableState.tableCards[1]}></Card>
-                    <Card id="card3" cardNum={this.props.tableState.tableCards[2]}></Card>
-                    <Card id="card4" cardNum={this.props.tableState.tableCards[3]}></Card>
-                    <Card id="card5" cardNum={this.props.tableState.tableCards[4]}></Card>        
+                    <Card _id="card1" cardNum={this.props.tableState.tableCards[0]}></Card>
+                    <Card _id="card2" cardNum={this.props.tableState.tableCards[1]}></Card>
+                    <Card _id="card3" cardNum={this.props.tableState.tableCards[2]}></Card>
+                    <Card _id="card4" cardNum={this.props.tableState.tableCards[3]}></Card>
+                    <Card _id="card5" cardNum={this.props.tableState.tableCards[4]}></Card>        
                 </div>
             );
             tableInfo = (
@@ -50,18 +50,17 @@ class GameBoard extends Component {
             );
         }
         return(
-            <div className="container-fluid">
-                <div className="row game-board">
+            <div className="row redish white-text">
+                <div id="game-board">
                     <div className="col s12 m10 push-m1">
-
-                        <div id="cardDisplay" className="row center">
-                            { tableCards }
+                        <div className="row center">
+                            <div id="card-display">
+                                { tableCards }
+                            </div>
                         </div>
-
                         <div className="row">
                             { tableInfo }
                         </div>
-
                     </div>
                 </div>
             </div>

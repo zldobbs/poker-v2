@@ -1,14 +1,92 @@
 /* Master style sheet */
 
-.status-bar h3 {
+/* Changes to materialize framework */
+
+.container-fluid {
+  max-height: 100vh;
+  overflow-y: hidden;
+}
+
+.row {
+  margin-bottom: 0;
+}
+
+/* Color pallette */
+
+.blackish {
+  background-color: #495867;
+}
+
+.blueish-dk {
+  background-color: #577399;
+}
+
+.blueish-lt {
+  background-color: #BDD5EA;
+}
+
+.whiteish {
+  background-color: #F7F7FF;
+}
+
+.redish {
+  background-color: #FE5F55;
+}
+
+/* General css */
+
+#status-bar {
+  max-height: 7vh;
+}
+
+#status-bar h3 {
   margin-bottom: 0;
   margin-top: 0; 
 }
 
-.game-board {
-  width: 80vw;
+#game-board {
+  max-height: 20vh;
 }
 
-#cardDisplay {
-  min-height: 20vh;
+#card-display {
+  padding-top: 2vh;
+  margin: 0 auto;
+}
+
+#players-area {
+  max-height: 25vh;
+  overflow-y: scroll;
+}
+
+.player-profile-pic {
+  height: 50px;
+  width: 50px;
+}
+
+#user-area {
+  min-height: 100vh;
+}
+
+.action-btn {
+  width: 100%;
+  margin-top: 5vh;
+}
+
+/* Specific rules to be applied to sm */
+@media only screen and (max-width: 600px) {
+    /* Card size: width = ceil( height * 0.654 ) */
+    .card-img {
+      height: 100px;
+      width: 65px;
+    }
+}
+
+/* Specific rules to be applied to md, lg, ... */
+@media only screen and (min-width: 601px) {
+    /* Card size: width = ceil( height * 0.654 ) */
+    .card-img {
+      height: 175px;
+      width: 115px;
+    }
+
 }

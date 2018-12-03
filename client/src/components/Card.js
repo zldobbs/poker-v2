@@ -22,13 +22,13 @@ class Card extends Component {
         // Only load an image if there is a card at this spot
         if (cardNum) {
             cardImageURL = require(`../assets/img/cards/${cardNum}.png`);  
-            cardImage = (<img className="responsive-img" src={cardImageURL} alt="1"></img>);
+            cardImage = (<img className="card-img" src={cardImageURL} alt="card"></img>);
         }
         else {
             cardImage = (<span></span>);
         }
         return(
-            <div className="col m2 push-m1 s4">
+            <div id={this.props._id} className="col s2 push-s1 card-box">
                 { cardImage }
             </div>
         );
