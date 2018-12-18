@@ -14,31 +14,73 @@ import GameBoard from './components/GameBoard';
 import StatusBar from './components/StatusBar';
 import PlayersArea from './components/PlayersArea';
 import UserArea from './components/UserArea';
+import LoginPage from './components/LoginPage';
 
 // Setup socket connection with backend 
 const socket = socketIOClient('localhost:4000');
 
 class App extends Component {
-  state = {
-    // Status message to provide updates during the game
-    statusMsg: 'Poker',
-    // Table state manages the cards and bet information for the game 
-    tableState: {
-      tableCards: [],
-      tablePot: 0,
-      currentBet: 0,
-    },
-    // User is essentially a player
-    user: {
-      username: 'Zach',
-      pot: 1000,
-      bet: 100,
-      card1: 17,
-      card2: 39
-    },
-    // Players currently in the game
-    players: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      // Status message to provide updates during the game
+      statusMsg: 'Poker',
+      // Table state manages the cards and bet information for the game 
+      tableState: {
+        tableCards: [],
+        tablePot: 0,
+        currentBet: 0,
+      },
+      // User is essentially a player
+      user: {
+        username: 'Zach',
+        pot: 1000,
+        bet: 100,
+        card1: 17,
+        card2: 39
+      },
+      // Players currently in the game
+      players: [],
+      // Is there a user logged in 
+      loggedIn: false,
+      // View settings 
+      view: 'GamePage',
+      // Optional error text
+      errorText: ''
+    };
+
+    this.handleLoginLinkClick = this.handleLoginLinkClick.bind(this);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.handleRegisterClick = this.handleRegisterClick.bind(this);
+    this.switchViewToHome = this.switchViewToHome.bind(this);
+  }
+
+  handleLoginLinkClick(e) {
+    // change the user's view to the login page
+    e.preventDefault();
+    this.setState({ 
+      view: 'LoginPage',
+      errorText: ''
+    });
+  }
+
+  handleLoginClick() {
+    // attempt to login the user
+    // if successful, send the view to the game page
+    this.setState({ view: 'GamePage' });
+  }
+
+  handleRegisterClick(e) {
+    // attempt to register the user
+    // if successful, send the view to the game page
+    // if failure, pass the error down to the LoginPage 
+    e.preventDefault();
+    this.setState({ errorText: 'Failed to login' });
+  }
+
+  switchViewToHome() {
+    this.setState({ view: 'GamePage' });
+  }
 
   componentDidMount() {
     // Socket connection test
@@ -63,12 +105,38 @@ class App extends Component {
   }
 
   render() {
+    let view; 
+    console.log('Rendering view: ' + this.state.view);
+    switch(this.state.view) {
+      case 'LoginPage': 
+        view = (
+          <LoginPage 
+            errorText={this.state.errorText} 
+            handleLoginClick={this.handleLoginClick} 
+            handleRegisterClick={this.handleRegisterClick}
+            switchViewToHome={this.switchViewToHome}>
+          </LoginPage>
+        );
+        break;
+      case 'GamePage':
+      default: 
+        view = (
+          <div>        
+            <StatusBar 
+              handleClick={this.handleLoginLinkClick} 
+              status={this.state.statusMsg} 
+              loggedIn={this.state.loggedIn}>
+            </StatusBar>
+            <GameBoard tableState={this.state.tableState}></GameBoard>
+            <PlayersArea players={this.state.players}></PlayersArea>
+            <UserArea player={this.state.user}></UserArea>
+          </div>
+        );
+        break;
+    }
     return (
-      <div className="container-fluid">
-        <StatusBar status={this.state.statusMsg}></StatusBar>
-        <GameBoard tableState={this.state.tableState}></GameBoard>
-        <PlayersArea players={this.state.players}></PlayersArea>
-        <UserArea player={this.state.user}></UserArea>
+      <div className="container-fluid blackish"> 
+        { view }
       </div>      
     );
   }
