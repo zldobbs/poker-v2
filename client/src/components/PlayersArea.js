@@ -17,15 +17,18 @@ import PlayerIcon from './PlayerIcon.js';
 // Highlight the winning user's icon.
 class PlayersArea extends Component {
     render() {
+        let playerIcons = [];
+        console.log('players: ' + this.props.players);
+        for (let i = 0; i < this.props.players.length; i++) {
+            playerIcons.push(
+                <PlayerIcon key={i} player={this.props.players[i]}></PlayerIcon>
+            );
+            console.log('pushed ' + this.props.players[i].username);
+        }
         return(
             <div className="row center blueish-dk white-text z-depth-3">
                 <div id="players-area">
-                    <PlayerIcon player={this.props.players[0]}></PlayerIcon>
-                    <PlayerIcon player={this.props.players[1]}></PlayerIcon>
-                    <PlayerIcon player={this.props.players[2]}></PlayerIcon>
-                    <PlayerIcon player={this.props.players[3]}></PlayerIcon>
-                    <PlayerIcon player={this.props.players[4]}></PlayerIcon>
-                    <PlayerIcon player={this.props.players[5]}></PlayerIcon>
+                    { playerIcons }
                 </div>
             </div>
         );

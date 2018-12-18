@@ -31,56 +31,13 @@ class App extends Component {
     // User is essentially a player
     user: {
       username: 'Zach',
-      totalMoney: 1000,
-      currentBet: 100,
-      c1: 17,
-      c2: 39
+      pot: 1000,
+      bet: 100,
+      card1: 17,
+      card2: 39
     },
     // Players currently in the game
-    players: [
-      {
-        username: 'Jim',
-        totalMoney: 0,
-        currentBet: 100,
-        c1: 1,
-        c2: 5
-      },
-      {
-        username: 'Hank',
-        totalMoney: 6570,
-        currentBet: 100,
-        c1: 41,
-        c2: 45
-      },
-      {
-        username: 'Sally',
-        totalMoney: 120,
-        currentBet: 100,
-        c1: 31,
-        c2: 25
-      },
-      {
-        username: 'Sam',
-        totalMoney: 2220,
-        currentBet: 100,
-        c1: 11,
-        c2: 51
-      },
-      {
-        username: 'Johnny',
-        totalMoney: 19,
-        currentBet: 10,
-        c1: 14,
-        c2: 50
-      },
-      {
-        username: 'Kimmy',
-        totalMoney: 10,
-        currentBet: 1200,
-        c1: 13,
-        c2: 52
-      }
-    ]
+    players: []
   };
 
   componentDidMount() {
@@ -94,6 +51,14 @@ class App extends Component {
           currentBet: 10
         }
       });
+    });
+
+    socket.on('who', (data) => {
+      // updates on current players
+      this.setState({
+        players: data.players
+      });
+      console.log('Updated players: ' + this.state.players);
     });
   }
 

@@ -17,10 +17,21 @@ app.use(bodyParser.json());
 const server = app.listen(4000);
 const io = require('socket.io')(server, {origins: 'http://localhost:3000'});
 
+const Game = require('./model/GameState');
+const Player = require('./model/Player');
+
+let game = new Game;  
+
 // Socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
     socket.emit('welcome', {text: 'Connected to server'});
+    let player = new Player; 
+    game.addPlayer(player);
+    // emit the updated list of players
+    console.log('who: ' + game.getPlayers());
+    socket.emit('who', {players: game.getPlayers()});
+
     // Handle user disconnections 
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
