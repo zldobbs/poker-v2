@@ -22,7 +22,7 @@ const Player = require('./model/Player');
 
 let game = new Game;  
 
-// Socket-io connections handled here
+// socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
     socket.emit('welcome', {text: 'Connected to server'});
@@ -32,12 +32,28 @@ io.on('connection', (socket) => {
     console.log('who: ' + game.getPlayers());
     socket.emit('who', {players: game.getPlayers()});
 
-    // Handle user disconnections 
+    // handle user login attempts 
+    socket.on('login', (user) => {
+        console.log('Login attempt: ' + user.username + ', ' + user.password);
+        // this is a test of a real response 
+        socket.emit('login success', user);
+    });
+
+    // handle user registration attempts 
+    socket.on('register', (user) => {
+        console.log('Registration attempt: ' + user.username + ', ' + user.password);
+        // this is a test of an error response
+        socket.emit('login error', { text: 'Failed to register' });
+    });
+
+    // TODO handle logouts 
+
+    // handle user disconnections 
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
     });
 });
 
-// Set port and launch server
+// set port and launch server
 const port = 4000;
 server.listen(port, () => console.log('Server started on port ' + port));

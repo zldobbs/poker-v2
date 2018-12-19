@@ -55,30 +55,38 @@ class App extends Component {
     this.switchViewToHome = this.switchViewToHome.bind(this);
   }
 
-  handleLoginLinkClick(e) {
+  handleLoginLinkClick() {
     // change the user's view to the login page
-    e.preventDefault();
-    this.setState({ 
-      view: 'LoginPage',
-      errorText: ''
-    });
+    if (this.state.loggedIn) {
+      this.setState({ loggedIn: false });
+    }
+    else {
+      this.setState({ view: 'LoginPage', errorText: '' });  
+    }
   }
 
-  handleLoginClick() {
+  handleLoginClick(user) {
     // attempt to login the user
-    // if successful, send the view to the game page
-    this.setState({ view: 'GamePage' });
+    if (user.username.length > 0 && user.password.length > 0) {
+      socket.emit('login', user);
+    }
+    else {
+      this.setState({ errorText: 'Please provide a valid username and password' });
+    }
   }
 
-  handleRegisterClick(e) {
+  handleRegisterClick(user) {
     // attempt to register the user
-    // if successful, send the view to the game page
-    // if failure, pass the error down to the LoginPage 
-    e.preventDefault();
-    this.setState({ errorText: 'Failed to login' });
+    if (user.username.length > 0 && user.password.length > 0) {
+      socket.emit('register', user);
+    }
+    else {
+      this.setState({ errorText: 'Please provide a valid username and password' });
+    }
   }
 
   switchViewToHome() {
+    // switches the user's view to the home page (poker table) 
     this.setState({ view: 'GamePage' });
   }
 
@@ -100,7 +108,17 @@ class App extends Component {
       this.setState({
         players: data.players
       });
-      console.log('Updated players: ' + this.state.players);
+    });
+
+    socket.on('login success', (data) => {
+      // update user display on successful login 
+      // set user info here
+      this.setState({ view: 'GamePage', loggedIn: true });
+    });
+
+    socket.on('login error', (err) => {
+      // if user fails to log in, set an error message
+      this.setState({ errorText: err.text });
     });
   }
 
