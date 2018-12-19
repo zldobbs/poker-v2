@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
 import './App.css';
 import socketIOClient from 'socket.io-client';
+import axios from 'axios';
 
 // Component imports
 import GameBoard from './components/GameBoard';
@@ -18,6 +19,7 @@ import LoginPage from './components/LoginPage';
 
 // Setup socket connection with backend 
 const socket = socketIOClient('localhost:4000');
+
 
 class App extends Component {
   constructor(props) {
@@ -68,7 +70,20 @@ class App extends Component {
   handleLoginClick(user) {
     // attempt to login the user
     if (user.username.length > 0 && user.password.length > 0) {
-      socket.emit('login', user);
+      // socket.emit('login', user);
+      axios.post('http://localhost:4000/api/accounts/login', user)
+        .then((res) => {
+          if (res.err) {
+            this.setState({ errorText: res.err });
+          }
+          else {
+            // TODO expand upon this functionality
+            this.setState({ loggedIn: !this.state.loggedIn, view: 'GamePage' });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     else {
       this.setState({ errorText: 'Please provide a valid username and password' });
@@ -78,7 +93,20 @@ class App extends Component {
   handleRegisterClick(user) {
     // attempt to register the user
     if (user.username.length > 0 && user.password.length > 0) {
-      socket.emit('register', user);
+      // socket.emit('register', user);
+      axios.post('http://localhost:4000/api/accounts/register', user)
+        .then((res) => {
+          if (res.err) {
+            this.setState({ errorText: res.err });
+          }
+          else {
+            // TODO expand upon this functionality
+            this.setState({ loggedIn: !this.state.loggedIn, view: 'GamePage' });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     else {
       this.setState({ errorText: 'Please provide a valid username and password' });
@@ -108,17 +136,6 @@ class App extends Component {
       this.setState({
         players: data.players
       });
-    });
-
-    socket.on('login success', (data) => {
-      // update user display on successful login 
-      // set user info here
-      this.setState({ view: 'GamePage', loggedIn: true });
-    });
-
-    socket.on('login error', (err) => {
-      // if user fails to log in, set an error message
-      this.setState({ errorText: err.text });
     });
   }
 

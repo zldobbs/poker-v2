@@ -11,11 +11,20 @@
 */
 
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-app.use(bodyParser.json());
 const server = app.listen(4000);
 const io = require('socket.io')(server, {origins: 'http://localhost:3000'});
+
+app.use(cors());
+app.options('*', cors());
+app.use(bodyParser.json());
+
+app.io = io;
+
+const accounts = require('./routes/api/accounts');
+app.use('/api/accounts', accounts);
 
 const Game = require('./model/GameState');
 const Player = require('./model/Player');
@@ -31,22 +40,6 @@ io.on('connection', (socket) => {
     // emit the updated list of players
     console.log('who: ' + game.getPlayers());
     socket.emit('who', {players: game.getPlayers()});
-
-    // handle user login attempts 
-    socket.on('login', (user) => {
-        console.log('Login attempt: ' + user.username + ', ' + user.password);
-        // this is a test of a real response 
-        socket.emit('login success', user);
-    });
-
-    // handle user registration attempts 
-    socket.on('register', (user) => {
-        console.log('Registration attempt: ' + user.username + ', ' + user.password);
-        // this is a test of an error response
-        socket.emit('login error', { text: 'Failed to register' });
-    });
-
-    // TODO handle logouts 
 
     // handle user disconnections 
     socket.on('disconnect', () => {
