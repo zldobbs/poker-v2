@@ -17,10 +17,29 @@ router.post('/login', (req, res) => {
     // req.app.io.emit('welcome', {text: 'sockets on'});
     // response ex: res.json({ cool: 'true' });
     let accounts = require('../../model/store.json');
-    
+    let data; 
+    for (var i = 0; i < accounts.length; i++) {
+        if (accounts[i].username.toLowerCase() == req.body.username.toLowerCase()) {
+            if (accounts[i].password == req.body.password) {
+                var userNoPass = { username: accounts[i].username, pot: accounts[i].pot };
+                data = { succ: true, user: userNoPass };
+                res.json(data);
+            }
+            else {
+                data = { succ: false, err: true, errText: 'Incorrect password' };
+                res.json(data);
+            }
+        }
+        if (data) break;
+    }
+    if (!data) {
+        data = { succ: false, err: true, errText: 'Username does not exist' };
+        res.json(data);
+    }
 });
 
 // POST::register
+// attempt to register the user 
 router.post('/register', (req, res) => {
     let accounts = require('../../model/store.json');
     let data;
