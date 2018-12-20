@@ -5,10 +5,11 @@
 */
 
 class Player {
-    constructor() {
-        this.username = 'Jim';
+    // constructor for a brand new user 
+    constructor(username, pot) {
+        this.username = username;
+        this.pot = pot; 
         this.bet = 0; 
-        this.pot = 0; 
         this.card1 = null;
         this.card2 = null; 
     }

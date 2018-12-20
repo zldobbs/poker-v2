@@ -73,8 +73,8 @@ class App extends Component {
       // socket.emit('login', user);
       axios.post('http://localhost:4000/api/accounts/login', user)
         .then((res) => {
-          if (res.err) {
-            this.setState({ errorText: res.err });
+          if (res.data.err) {
+            this.setState({ errorText: res.data.errText });
           }
           else {
             // TODO expand upon this functionality
@@ -96,12 +96,19 @@ class App extends Component {
       // socket.emit('register', user);
       axios.post('http://localhost:4000/api/accounts/register', user)
         .then((res) => {
-          if (res.err) {
-            this.setState({ errorText: res.err });
+          if (res.data.err) {
+            this.setState({ errorText: res.data.errText });
           }
           else {
-            // TODO expand upon this functionality
             this.setState({ loggedIn: !this.state.loggedIn, view: 'GamePage' });
+            axios.post('http://localhost:4000/api/game/joinGame', res.data.user)
+            .then((res) => {
+              // user should have joined the game at this point.
+              // should be updated to all users 
+            })
+            .catch((err) => {
+              console.log(err);
+            });
           }
         })
         .catch((err) => {

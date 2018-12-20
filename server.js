@@ -24,22 +24,21 @@ app.use(bodyParser.json());
 app.io = io;
 
 const accounts = require('./routes/api/accounts');
+const game = require('./routes/api/game');
 app.use('/api/accounts', accounts);
+app.use('/api/game', game);
 
 const Game = require('./model/GameState');
 const Player = require('./model/Player');
 
-let game = new Game;  
+let gameState = new Game;  
+app.game = gameState; 
 
 // socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
+    // test connection
     socket.emit('welcome', {text: 'Connected to server'});
-    let player = new Player; 
-    game.addPlayer(player);
-    // emit the updated list of players
-    console.log('who: ' + game.getPlayers());
-    socket.emit('who', {players: game.getPlayers()});
 
     // handle user disconnections 
     socket.on('disconnect', () => {

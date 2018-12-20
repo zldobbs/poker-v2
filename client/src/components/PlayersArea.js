@@ -18,8 +18,8 @@ import PlayerIcon from './PlayerIcon.js';
 class PlayersArea extends Component {
     render() {
         let playerIcons = [];
-        console.log('players: ' + this.props.players);
-        for (let i = 0; i < this.props.players.length; i++) {
+        let players = this.props.players ? this.props.players : [];
+        for (let i = 0; i < players; i++) {
             playerIcons.push(
                 <PlayerIcon key={i} player={this.props.players[i]}></PlayerIcon>
             );
