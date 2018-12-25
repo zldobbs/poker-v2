@@ -37,10 +37,12 @@ app.game = gameState;
 // socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
+    console.log(app.game.getPlayers());
     // test connection
     socket.emit('welcome', {text: 'Connected to server'});
-
+    socket.emit('who', {players: app.game.getPlayers()});
     // handle user disconnections 
+    // logout should occur here
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
     });

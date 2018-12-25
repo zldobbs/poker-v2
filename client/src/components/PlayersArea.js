@@ -19,7 +19,7 @@ class PlayersArea extends Component {
     render() {
         let playerIcons = [];
         let players = this.props.players ? this.props.players : [];
-        for (let i = 0; i < players; i++) {
+        for (let i = 0; i < players.length; i++) {
             playerIcons.push(
                 <PlayerIcon key={i} player={this.props.players[i]}></PlayerIcon>
             );

@@ -60,7 +60,19 @@ class App extends Component {
   handleLoginLinkClick() {
     // change the user's view to the login page
     if (this.state.loggedIn) {
-      this.setState({ loggedIn: false });
+      const updatedUser = { username: this.state.user.username, pot: this.state.user.pot };
+      axios.post('http://localhost:4000/api/accounts/logout', updatedUser) 
+      .then((res) => {
+        if (res.data.err) {
+          console.log(res.data.errText);
+        }
+        else {
+          this.setState({ loggedIn: false });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      }); 
     }
     else {
       this.setState({ view: 'LoginPage', errorText: '' });  

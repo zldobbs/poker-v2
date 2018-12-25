@@ -16,7 +16,6 @@ const profileImageURL = require('../assets/img/blank-profile-picture.png');
 // Pass into icon the player's cards, 
 class PlayerIcon extends Component {
     render() {
-        console.log('player icon: ' + this.props.player.username);
         return(
             <div className="col s6 m2">
                 <div className="player-icon">

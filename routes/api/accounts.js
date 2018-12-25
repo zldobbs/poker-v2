@@ -10,19 +10,37 @@ const fs = require('fs');
 
 const Player = require('../../model/Player');
 
+// takes in a json array of user profiles to be written to the json file 
+function updateAccountFile(accounts) {
+    let accountsJSON = JSON.stringify(accounts);
+    fs.writeFile("./model/store.json", accountsJSON, 'utf8', (err) => {
+        if (err) {
+            console.log(err);
+            return false; 
+        }
+    });
+    return true;
+}
+
 // POST::login
 // attempt to login the user 
 router.post('/login', (req, res) => {
     // using io in the api: 
     // req.app.io.emit('welcome', {text: 'sockets on'});
     // response ex: res.json({ cool: 'true' });
+
+    // login should create a new player
+    // this new player should be added to the global game state 
+    // this function within game should emit the updated list of users to every player
     let accounts = require('../../model/store.json');
     let data; 
     for (var i = 0; i < accounts.length; i++) {
         if (accounts[i].username.toLowerCase() == req.body.username.toLowerCase()) {
             if (accounts[i].password == req.body.password) {
-                var userNoPass = { username: accounts[i].username, pot: accounts[i].pot };
-                data = { succ: true, user: userNoPass };
+                var player = new Player( accounts[i].username, accounts[i].pot );
+                data = { succ: true, user: player };
+                req.app.game.addPlayer(player);
+                req.app.io.emit('who', {players: req.app.game.getPlayers()});
                 res.json(data);
             }
             else {
@@ -49,6 +67,7 @@ router.post('/register', (req, res) => {
             data = { succ: false, err: true, errText: 'Username already exists' };
             res.json(data);
         }
+        if (data) break;
     }
     if (!data) {
         // user not found
@@ -59,17 +78,35 @@ router.post('/register', (req, res) => {
         }
         // let player = new Player(user.username, user.pot);
         accounts.push(user);
-        let accountsJSON = JSON.stringify(accounts);
-        fs.writeFile("./model/store.json", accountsJSON, 'utf8', (err) => {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                var userNoPass = { username: user.username, pot: user.pot };
-                data = { succ: true, user: userNoPass };
-                res.json(data);
-            }
-        });
+        if (updateAccountFile(accounts)) {
+            var userNoPass = { username: user.username, pot: user.pot };
+            data = { succ: true, user: userNoPass };
+            res.json(data);
+        }
+    }
+});
+
+// POST::logout
+// logs out the user 
+router.post('/logout', (req, res) => {
+    // need to update the user's pot 
+    // send updated player list to all users
+    let data; 
+    let accounts = require('../../model/store.json');
+    for (var i = 0; i < accounts.length; i++) {
+        if (accounts[i].username.toLowerCase() == req.body.username.toLowerCase()) {
+            accounts[i].pot = req.body.pot; 
+            updateAccountFile(accounts);
+            req.app.game.removePlayer(accounts[i]);
+            req.app.io.emit('who', {players: req.app.game.getPlayers()});
+            data = { succ: true };
+            res.json(data);
+        }
+        if (data) break; 
+    }
+    if (!data) {
+        data = { succ: false, err: true, errText: 'Unable to find player' };
+        res.json(data);
     }
 });
 

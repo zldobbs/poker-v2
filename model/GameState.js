@@ -29,6 +29,13 @@ class GameState {
     removePlayer(player) {
         // removes given player from room
         // error if player is not in the room 
+        let players = this.players;
+        for (var i = 0; i < players.length; i++) {
+            if (player.username.toLowerCase() == players[i].username.toLowerCase()) {
+                players.splice(i, 1);
+            }
+        }
+        this.players = players; 
     }
 
     getBet() {
