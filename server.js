@@ -41,10 +41,23 @@ io.on('connection', (socket) => {
     // test connection
     socket.emit('welcome', {text: 'Connected to server'});
     socket.emit('who', {players: app.game.getPlayers()});
+
+    // retrieve username from client to bind to the socket 
+    socket.on('bind user', (user) => {
+        app.game.sockets[user.username] = socket.id; 
+    });
+
     // handle user disconnections 
-    // logout should occur here
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
+        // find user in game state's socket array to force a logout
+        for (var username in app.game.sockets) {
+            if (app.game.sockets[username] == socket.id) {
+                app.game.removePlayer({username: username});
+                delete app.game.sockets[username];
+                io.emit('who', {players: app.game.getPlayers()});
+            }
+        }
     });
 });
 

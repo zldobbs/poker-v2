@@ -87,6 +87,7 @@ class App extends Component {
               user: res.data.user,
               view: 'GamePage' 
             });
+            socket.emit('bind user', {username: res.data.user.username});
           }
         })
         .catch((err) => {
@@ -112,6 +113,7 @@ class App extends Component {
               user: res.data.user,
               view: 'GamePage' 
             });
+            socket.emit('bind user', {username: res.data.user.username});
           }
         })
         .catch((err) => {

@@ -4,9 +4,7 @@
     Handle account manipulations here 
 
     TODO::
-    prevent users from logging in with an account that is already logged in 
-    test if updating the users pot on logout is working
-    implement logout functionality on disconnects
+    test if updating the users pot on logout is working 
 */
 
 const express = require('express');
@@ -31,8 +29,18 @@ function updateAccountFile(accounts) {
 // attempt to login the user 
 router.post('/login', (req, res) => {
     let accounts = require('../../model/store.json');
-    let data; 
+    let data;
+    // check if the account is already logged in 
+    let players = req.app.game.getPlayers();
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].username.toLowerCase() == req.body.username.toLowerCase()) {
+            data = { succ: false, err: true, errText: 'User is already logged in' };
+            res.json(data);
+        }
+        if (data) break;
+    } 
     for (var i = 0; i < accounts.length; i++) {
+        if (data) break;
         if (accounts[i].username.toLowerCase() == req.body.username.toLowerCase()) {
             if (accounts[i].password == req.body.password) {
                 // sign in successful 
@@ -47,7 +55,6 @@ router.post('/login', (req, res) => {
                 res.json(data);
             }
         }
-        if (data) break;
     }
     if (!data) {
         data = { succ: false, err: true, errText: 'Username does not exist' };

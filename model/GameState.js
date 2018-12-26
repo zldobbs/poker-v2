@@ -13,6 +13,7 @@ class GameState {
         this.bet = 0;
         this.pot = 0;
         this.step = 0; 
+        this.sockets = {};
     }
 
     getPlayers() {
