@@ -4,12 +4,9 @@
     Handle account manipulations here 
 
     TODO::
-    fix user vs player consistency
-        user should default to null
-        extend the display of the players area when user is null
     prevent users from logging in with an account that is already logged in 
-    fix logout issues
-        test if updating the users pot on logout is working
+    test if updating the users pot on logout is working
+    implement logout functionality on disconnects
 */
 
 const express = require('express');

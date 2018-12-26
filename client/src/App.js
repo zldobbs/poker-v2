@@ -76,7 +76,6 @@ class App extends Component {
   handleLoginClick(user) {
     // attempt to login the user
     if (user.username.length > 0 && user.password.length > 0) {
-      // socket.emit('login', user);
       axios.post('http://localhost:4000/api/accounts/login', user)
         .then((res) => {
           if (res.data.err) {
@@ -102,7 +101,6 @@ class App extends Component {
   handleRegisterClick(user) {
     // attempt to register the user
     if (user.username.length > 0 && user.password.length > 0) {
-      // socket.emit('register', user);
       axios.post('http://localhost:4000/api/accounts/register', user)
         .then((res) => {
           if (res.data.err) {
