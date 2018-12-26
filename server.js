@@ -41,6 +41,7 @@ io.on('connection', (socket) => {
     // test connection
     socket.emit('welcome', {text: 'Connected to server'});
     socket.emit('who', {players: app.game.getPlayers()});
+    socket.emit('game state', {game: app.game});
 
     // retrieve username from client to bind to the socket 
     socket.on('bind user', (user) => {

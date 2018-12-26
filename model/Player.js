@@ -12,6 +12,7 @@ class Player {
         this.bet = 0; 
         this.card1 = null;
         this.card2 = null; 
+        this.playing = false; 
     }
 }
 

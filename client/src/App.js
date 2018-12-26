@@ -29,9 +29,11 @@ class App extends Component {
       statusMsg: 'Poker',
       // Table state manages the cards and bet information for the game 
       tableState: {
+        dealer: null,
+        currPlayer: null,
         tableCards: [],
-        tablePot: 0,
-        currentBet: 0,
+        tablePot: -1,
+        tableBet: -1,
       },
       // User is essentially a player
       user: null,
@@ -149,6 +151,19 @@ class App extends Component {
         players: data.players
       });
     });
+
+    socket.on('game state', (data) => {
+      // updates the entire game state to reflect backend 
+      this.setState({
+        tableState: {
+          dealer: data.game.dealer,
+          currPlayer: data.game.currPlayer,
+          tableCards: data.game.tableCards,
+          tablePot: data.game.pot,
+          tableBet: data.game.bet
+        }
+      });
+    });
   }
 
   render() {
@@ -171,8 +186,12 @@ class App extends Component {
         if (this.state.loggedIn) {
           playersView = (
             <div>
-              <PlayersArea loggedIn={this.state.loggedIn} players={this.state.players}></PlayersArea>
-              <UserArea player={this.state.user}></UserArea>
+              <PlayersArea 
+                loggedIn={this.state.loggedIn}
+                tableState={this.state.tableState} 
+                players={this.state.players}>
+              </PlayersArea>
+              <UserArea player={this.state.user} tableState={this.state.tableState}></UserArea>
             </div>
           );
         }

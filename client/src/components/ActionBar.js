@@ -15,21 +15,25 @@
 import React, { Component } from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
 
+import PlayAction from './PlayAction';
+import ReadyAction from './ReadyAction';
+
 class ActionBar extends Component {
     render() {
+        let actions;
+        // the table's pot being set to -1 is a flag for initial game state
+        if (this.props.tableState.tablePot === -1) {
+            actions = (<ReadyAction />);
+        }
+        else if (this.props.tableState.currPlayer.username === this.props.player.username) {
+            actions = (<PlayAction />);
+        }
+        else {
+            actions = (<span></span>);
+        }
         return(
             <div className="col s6 m9 push-m2">
-                <div className="row center">
-                    <div className="col s12 m3">
-                        <button className="btn waves-effect action-btn redish">Fold</button>
-                    </div>
-                    <div className="col s12 m3">
-                        <button className="btn waves-effect action-btn blueish-lt black-text">Check</button>
-                    </div>
-                    <div className="col s12 m3">
-                        <button className="btn waves-effect action-btn blueish-dk">Bet</button>
-                    </div>
-                </div>
+                { actions }
             </div>
         );
     }

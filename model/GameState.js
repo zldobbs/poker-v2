@@ -7,12 +7,13 @@
 
 class GameState {
     constructor() {
+        this.dealer = null; 
         this.currPlayer = null;
         this.players = [];
         this.tableCards = [];
-        this.bet = 0;
-        this.pot = 0;
-        this.step = 0; 
+        this.bet = -1;
+        this.pot = -1;
+        this.step = -1; 
         this.sockets = {};
     }
 

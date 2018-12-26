@@ -14,7 +14,7 @@ import Card from './Card';
 class GameBoard extends Component {
     render() {
         let tableCards, tableInfo;
-        if (this.props.tableState.tableCards[0]) {
+        if (this.props.tableState.tableCards[0] && this.props.tableState.bet >= 0 ) {
             // If we have at least one card, we should render them all 
             // This would mean that a game has started. Could be at any point in the game 
             // (i.e. not all cards need to be defined. If 0 is defined, 0-2 should all be defined)
