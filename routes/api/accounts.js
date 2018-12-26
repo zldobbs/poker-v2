@@ -2,6 +2,14 @@
     Accounts controller 
 
     Handle account manipulations here 
+
+    TODO::
+    fix user vs player consistency
+        user should default to null
+        extend the display of the players area when user is null
+    prevent users from logging in with an account that is already logged in 
+    fix logout issues
+        test if updating the users pot on logout is working
 */
 
 const express = require('express');
@@ -25,18 +33,12 @@ function updateAccountFile(accounts) {
 // POST::login
 // attempt to login the user 
 router.post('/login', (req, res) => {
-    // using io in the api: 
-    // req.app.io.emit('welcome', {text: 'sockets on'});
-    // response ex: res.json({ cool: 'true' });
-
-    // login should create a new player
-    // this new player should be added to the global game state 
-    // this function within game should emit the updated list of users to every player
     let accounts = require('../../model/store.json');
     let data; 
     for (var i = 0; i < accounts.length; i++) {
         if (accounts[i].username.toLowerCase() == req.body.username.toLowerCase()) {
             if (accounts[i].password == req.body.password) {
+                // sign in successful 
                 var player = new Player( accounts[i].username, accounts[i].pot );
                 data = { succ: true, user: player };
                 req.app.game.addPlayer(player);
@@ -80,6 +82,9 @@ router.post('/register', (req, res) => {
         accounts.push(user);
         if (updateAccountFile(accounts)) {
             var userNoPass = { username: user.username, pot: user.pot };
+            var player = new Player( user.username, user.pot );
+            req.app.game.addPlayer(player);
+            req.app.io.emit('who', {players: req.app.game.getPlayers()});
             data = { succ: true, user: userNoPass };
             res.json(data);
         }

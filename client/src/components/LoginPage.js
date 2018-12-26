@@ -87,10 +87,10 @@ class LoginPage extends Component {
                     </div>
                     <div className="row">
                         <div className="col s12 m2 push-m4">
-                            <button onClick={this.middlewareRegister} className="btn action-btn blueish-lt black-text">Register</button>
+                            <button onClick={this.middlewareLogin} className="btn action-btn blueish-dk">Login</button>
                         </div>
                         <div className="col s12 m2 push-m4">
-                            <button onClick={this.middlewareLogin} className="btn action-btn blueish-dk">Login</button>
+                            <button onClick={this.middlewareRegister} className="btn action-btn blueish-lt black-text">Register</button>
                         </div>
                     </div>
                 </form>

@@ -25,11 +25,24 @@ class PlayersArea extends Component {
             );
             console.log('pushed ' + this.props.players[i].username);
         }
-        return(
-            <div className="row center blueish-dk white-text z-depth-3">
-                <div id="players-area">
+        let area;
+        if (this.props.loggedIn) {
+            area = (
+                <div id="short-players-area">
                     { playerIcons }
                 </div>
+            );
+        }
+        else {
+            area = (
+                <div id="full-players-area">
+                    { playerIcons }
+                </div>
+            );
+        }
+        return(
+            <div className="row center blueish-dk white-text">
+                { area }
             </div>
         );
     }

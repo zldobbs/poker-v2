@@ -80,9 +80,15 @@
   margin: 0 auto;
 }
 
-#players-area {
+#short-players-area {
   max-height: 30vh;
   overflow-y: scroll;
+}
+
+#full-players-area {
+  max-height: 100vh;
+  overflow-y: scroll;
+  padding-bottom: 50vh;
 }
 
 .player-profile-pic {
@@ -105,6 +111,10 @@
 }
 
 /* General css */
+
+html {
+  background-color: #577399;
+}
 
 .inline {
   display: inline; 

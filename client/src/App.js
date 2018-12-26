@@ -34,13 +34,7 @@ class App extends Component {
         currentBet: 0,
       },
       // User is essentially a player
-      user: {
-        username: 'Zach',
-        pot: 1000,
-        bet: 100,
-        card1: 17,
-        card2: 39
-      },
+      user: null,
       // Players currently in the game
       players: [],
       // Is there a user logged in 
@@ -89,8 +83,11 @@ class App extends Component {
             this.setState({ errorText: res.data.errText });
           }
           else {
-            // TODO expand upon this functionality
-            this.setState({ loggedIn: !this.state.loggedIn, view: 'GamePage' });
+            this.setState({ 
+              loggedIn: !this.state.loggedIn,
+              user: res.data.user,
+              view: 'GamePage' 
+            });
           }
         })
         .catch((err) => {
@@ -112,14 +109,10 @@ class App extends Component {
             this.setState({ errorText: res.data.errText });
           }
           else {
-            this.setState({ loggedIn: !this.state.loggedIn, view: 'GamePage' });
-            axios.post('http://localhost:4000/api/game/joinGame', res.data.user)
-            .then((res) => {
-              // user should have joined the game at this point.
-              // should be updated to all users 
-            })
-            .catch((err) => {
-              console.log(err);
+            this.setState({ 
+              loggedIn: !this.state.loggedIn,
+              user: res.data.user,
+              view: 'GamePage' 
             });
           }
         })
@@ -160,6 +153,7 @@ class App extends Component {
 
   render() {
     let view; 
+    let playersView;
     console.log('Rendering view: ' + this.state.view);
     switch(this.state.view) {
       case 'LoginPage': 
@@ -174,6 +168,19 @@ class App extends Component {
         break;
       case 'GamePage':
       default: 
+        if (this.state.loggedIn) {
+          playersView = (
+            <div>
+              <PlayersArea loggedIn={this.state.loggedIn} players={this.state.players}></PlayersArea>
+              <UserArea player={this.state.user}></UserArea>
+            </div>
+          );
+        }
+        else {
+          playersView = (
+            <PlayersArea loggedIn={this.state.loggedIn} players={this.state.players}></PlayersArea>
+          )
+        }
         view = (
           <div>        
             <StatusBar 
@@ -182,8 +189,7 @@ class App extends Component {
               loggedIn={this.state.loggedIn}>
             </StatusBar>
             <GameBoard tableState={this.state.tableState}></GameBoard>
-            <PlayersArea players={this.state.players}></PlayersArea>
-            <UserArea player={this.state.user}></UserArea>
+            { playersView }
           </div>
         );
         break;
