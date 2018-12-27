@@ -20,7 +20,11 @@ class UserArea extends Component {
                     <div className="col s12 m6 push-m3 center">
                         <div className="row">
                             <PlayerIcon player={this.props.player}></PlayerIcon>
-                            <ActionBar tableState={this.props.tableState} player={this.props.player}></ActionBar>
+                            <ActionBar 
+                                player={this.props.player}
+                                tableState={this.props.tableState} 
+                                handleReadyUpClick={this.props.handleReadyUpClick}>
+                            </ActionBar>
                         </div>
                     </div>
                 </div>

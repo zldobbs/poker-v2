@@ -17,9 +17,11 @@ import PlayersArea from './components/PlayersArea';
 import UserArea from './components/UserArea';
 import LoginPage from './components/LoginPage';
 
-// Setup socket connection with backend 
-const socket = socketIOClient('localhost:4000');
+// Declare endpoint for server 
+const endpoint = 'http://localhost:4000';
 
+// Setup socket connection with backend 
+const socket = socketIOClient(endpoint);
 
 class App extends Component {
   constructor(props) {
@@ -50,6 +52,7 @@ class App extends Component {
     this.handleLoginLinkClick = this.handleLoginLinkClick.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
     this.handleRegisterClick = this.handleRegisterClick.bind(this);
+    this.handleReadyUpClick = this.handleReadyUpClick.bind(this);
     this.switchViewToHome = this.switchViewToHome.bind(this);
   }
 
@@ -57,7 +60,7 @@ class App extends Component {
     // change the user's view to the login page
     if (this.state.loggedIn) {
       const updatedUser = { username: this.state.user.username, pot: this.state.user.pot };
-      axios.post('http://localhost:4000/api/accounts/logout', updatedUser) 
+      axios.post(`${endpoint}/api/accounts/logout`, updatedUser) 
       .then((res) => {
         if (res.data.err) {
           console.log(res.data.errText);
@@ -78,7 +81,7 @@ class App extends Component {
   handleLoginClick(user) {
     // attempt to login the user
     if (user.username.length > 0 && user.password.length > 0) {
-      axios.post('http://localhost:4000/api/accounts/login', user)
+      axios.post(`${endpoint}/api/accounts/login`, user)
         .then((res) => {
           if (res.data.err) {
             this.setState({ errorText: res.data.errText });
@@ -104,7 +107,7 @@ class App extends Component {
   handleRegisterClick(user) {
     // attempt to register the user
     if (user.username.length > 0 && user.password.length > 0) {
-      axios.post('http://localhost:4000/api/accounts/register', user)
+      axios.post(`${endpoint}/api/accounts/register`, user)
         .then((res) => {
           if (res.data.err) {
             this.setState({ errorText: res.data.errText });
@@ -125,6 +128,18 @@ class App extends Component {
     else {
       this.setState({ errorText: 'Please provide a valid username and password' });
     }
+  }
+
+  handleReadyUpClick() {
+    // handle users readying up to play the game 
+    let user = this.state.user; 
+    axios.post(`${endpoint}/api/game/ready`, user)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   switchViewToHome() {
@@ -191,7 +206,11 @@ class App extends Component {
                 tableState={this.state.tableState} 
                 players={this.state.players}>
               </PlayersArea>
-              <UserArea player={this.state.user} tableState={this.state.tableState}></UserArea>
+              <UserArea 
+                player={this.state.user} 
+                tableState={this.state.tableState}
+                handleReadyUpClick={this.handleReadyUpClick}>
+              </UserArea>
             </div>
           );
         }

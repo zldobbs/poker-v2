@@ -23,7 +23,7 @@ class ActionBar extends Component {
         let actions;
         // the table's pot being set to -1 is a flag for initial game state
         if (this.props.tableState.tablePot === -1) {
-            actions = (<ReadyAction />);
+            actions = (<ReadyAction handleReadyUpClick={this.props.handleReadyUpClick} ready={this.props.player.playing} />);
         }
         else if (this.props.tableState.currPlayer.username === this.props.player.username) {
             actions = (<PlayAction />);
