@@ -135,7 +135,12 @@ class App extends Component {
     let user = this.state.user; 
     axios.post(`${endpoint}/api/game/ready`, user)
       .then((res) => {
-        console.log(res.data);
+        if (res.data.succ) {
+          this.setState({ user: res.data.user });
+        }
+        else {
+          console.log("Error: " + res.data.errText); 
+        }
       })
       .catch((err) => {
         console.log(err);

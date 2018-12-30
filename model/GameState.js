@@ -70,6 +70,52 @@ class GameState {
         // sets the tables pot
         this.pot = pot; 
     }
+
+    toggleReady(username) {
+        // inverts the given user's playing status
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].username === username) {
+                this.players[i].playing = !this.players[i].playing;
+                return this.players[i]; 
+            }
+        }
+        return null; 
+    }
+
+    setReady(username) {
+        // sets the given user to playing
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].username === username) {
+                this.players[i].playing = true;
+                return this.players[i]; 
+            }
+        }
+        return null; 
+    }
+
+    unsetReady(username) {
+        // set the given user to not ready
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].username === username) {
+                this.players[i].playing = false;
+                return this.players[i]; 
+            }
+        }
+        return null; 
+    }
+
+    checkReady() {
+        // determines if enough players are readied up to play
+        if (this.players.length < 2) {
+            // need at least 2 players to play
+            return false; 
+        }
+        for (var i = 0; i < this.players.length; i++) {
+            // if a single user is not ready, return false 
+            if (!this.players[i].playing) return false; 
+        }
+        return true; 
+    }
 }
 
 module.exports = GameState; 
