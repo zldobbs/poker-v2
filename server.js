@@ -38,14 +38,13 @@ app.game = gameState;
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
     console.log(app.game.getPlayers());
-    // test connection
-    socket.emit('welcome', {text: 'Connected to server'});
+
     socket.emit('who', {players: app.game.getPlayers()});
     socket.emit('game state', {game: app.game});
 
     // retrieve username from client to bind to the socket 
     socket.on('bind user', (user) => {
-        app.game.sockets[user.username] = socket.id; 
+        app.game.sockets[user.username] = socket; 
     });
 
     // handle user disconnections 

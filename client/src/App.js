@@ -153,18 +153,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // Socket connection test
-    socket.on('welcome', (message) => {
-      console.log(message.text);
-      this.setState({
-        tableState: {
-          tableCards: [1,4,8,12,13],
-          tablePot: 10,
-          currentBet: 10
-        }
-      });
-    });
-
     socket.on('who', (data) => {
       // updates on current players
       this.setState({
