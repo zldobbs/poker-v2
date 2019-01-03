@@ -71,12 +71,8 @@ io.on('connection', (socket) => {
                 app.game.removePlayer({username: username});
                 delete app.game.sockets[username];
                 io.emit('who', { players: app.game.getPlayers() });
+                app.updateGameState();
             }
-        }
-        // if all users leave, reset the game
-        // NOTE this should award winnings to the last remaining user 
-        if (app.game.players.length < 2) {
-            app.game.resetGame();
         }
     });
 });

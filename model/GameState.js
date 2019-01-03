@@ -32,6 +32,11 @@ class GameState {
         this.pot = -1;
         this.step = -1; 
         this.count = 0; 
+        // reset hands for any connected players
+        let hand = { c1: -1, c2: -1 };
+        for (var username in this.sockets) {
+            this.sockets[username].emit('hand', { hand: hand });
+        }
     }
 
     getPlayers() {
@@ -44,6 +49,22 @@ class GameState {
         this.players.push(player);
     }
 
+    handlePlayerLeave() {
+        // update the status of the game when a user leaves the game 
+        // if all users leave, reset the game
+        if (this.players.length < 2) {
+            this.resetGame();
+            return; 
+        }
+        // if the step is -1, we need to check if we're ready 
+        if (this.step == -1 && this.checkReady()) {
+            this.preFlop();
+            return; 
+        }
+        // TODO if the user is the currPlayer/Dealer, need to change to next player 
+        return; 
+    }
+
     removePlayer(player) {
         // removes given player from room
         // error if player is not in the room 
@@ -54,6 +75,7 @@ class GameState {
             }
         }
         this.players = players; 
+        this.handlePlayerLeave();
     }
 
     getBet() {
