@@ -21,8 +21,8 @@ import ReadyAction from './ReadyAction';
 class ActionBar extends Component {
     render() {
         let actions;
-        // the table's pot being set to -1 is a flag for initial game state
-        if (this.props.tableState.tablePot === -1) {
+        // the table's step is -1, we are at the initial phase 
+        if (this.props.tableState.step === -1) {
             actions = (<ReadyAction handleReadyUpClick={this.props.handleReadyUpClick} ready={this.props.player.playing} />);
         }
         else if (this.props.tableState.currPlayer.username === this.props.player.username) {

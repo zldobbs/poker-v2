@@ -34,13 +34,27 @@ const Player = require('./model/Player');
 let gameState = new Game;  
 app.game = gameState; 
 
+// update every user on the current game state
+app.updateGameState = function updateGameState() {
+    let game = app.game; 
+    let gamestate = {
+        dealer: game.dealer,
+        currPlayer: game.currPlayer,
+        tableCards: game.tableCards,
+        bet: game.bet,
+        pot: game.pot,
+        step: game.step
+    }
+    io.emit('game state', { game: gamestate });
+}
+
 // socket-io connections handled here
 io.on('connection', (socket) => {
     console.log('User connected: ' + socket.id);
     console.log(app.game.getPlayers());
 
-    socket.emit('who', {players: app.game.getPlayers()});
-    socket.emit('game state', {game: app.game});
+    socket.emit('who', { players: app.game.getPlayers() });
+    app.updateGameState();
 
     // retrieve username from client to bind to the socket 
     socket.on('bind user', (user) => {
@@ -55,7 +69,7 @@ io.on('connection', (socket) => {
             if (app.game.sockets[username] == socket.id) {
                 app.game.removePlayer({username: username});
                 delete app.game.sockets[username];
-                io.emit('who', {players: app.game.getPlayers()});
+                io.emit('who', { players: app.game.getPlayers() });
             }
         }
     });

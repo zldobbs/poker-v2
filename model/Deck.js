@@ -23,12 +23,20 @@ class Deck {
 
     draw() {
         // draws a new card from the deck 
-        let val = -1; 
+        console.log('drawing cards');
+        var val = -1; 
+        console.log('played length: ' + this.played.length);
+        if (this.played.length >= 52) {
+            return -1;
+        }
         // check if new val is within the currently played cards
-        while (this.played.indexOf(val) >= 0) {
+        while (this.played.indexOf(val) >= 0 || val == -1) {
             val = (Math.floor(Math.random() * 52) + 1);
         }
+        console.log('val = ' + val);
         this.played.push(val);
+        console.log('played = ');
+        console.log(this.played);
         return val; 
     }
 }  

@@ -34,8 +34,9 @@ class App extends Component {
         dealer: null,
         currPlayer: null,
         tableCards: [],
-        tablePot: -1,
         tableBet: -1,
+        tablePot: -1,
+        step: -1
       },
       // User is essentially a player
       user: null,
@@ -167,8 +168,9 @@ class App extends Component {
           dealer: data.game.dealer,
           currPlayer: data.game.currPlayer,
           tableCards: data.game.tableCards,
-          tablePot: data.game.pot,
-          tableBet: data.game.bet
+          tablePot: data.game.bet,
+          tableBet: data.game.pot,
+          step: data.game.step
         }
       });
     });

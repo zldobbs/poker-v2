@@ -125,9 +125,13 @@ class GameState {
     preFlop() {
         // initial game state. no cards on table, every player gets 2 cards dealt
         this.step = 0; 
+        this.deck.shuffle(); 
         // set the new dealer
         if (this.count > this.players.length-1) this.count = 0; 
         this.dealer = this.players[this.count];
+        // set the currPlayer to one to the left of the dealer
+        let currPlayerIndex = (this.count+1) % this.players.length; 
+        this.currPlayer = this.players[currPlayerIndex];
         this.count++; 
         // draw cards for every player
         let hand;
@@ -136,12 +140,17 @@ class GameState {
             hand = new Hand(this.players[i].username); 
             hand.c1 = this.deck.draw();
             hand.c2 = this.deck.draw();
+            console.log(this.players[i].username + ' drew ' + hand.c1 + ', ' + hand.c2);
+            if (hand.c1 < 1 || hand.c2 < 1) {
+                console.log(this.players[i].username + ' was dealt invalid cards');
+                return false; 
+            }  
             this.hands.push(hand);
             this.sockets[this.players[i].username].emit('hand', {hand: hand});
             // here is how to emit to a specific user: 
             // this.sockets[this.players[i].username].emit('hello', {msg: this.players[i].username});
         }
-        
+        return true; 
     }
 }
 

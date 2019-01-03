@@ -25,10 +25,13 @@ router.post('/ready', (req, res) => {
         }
         // need to check if enough players are ready to start playing 
         if (req.app.game.checkReady()) {
-            // should start the game if enough players are ready 
-            console.log('Game is ready to start');
             // move to the pre flop stage
-            req.app.game.preFlop(); 
+            if (req.app.game.preFlop()) {
+                req.app.updateGameState();
+            } 
+            else {
+                data = { succ: false, err: true, errText: "Pre-flop failure" };
+            }
         }
     }
     else {
