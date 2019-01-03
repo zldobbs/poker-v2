@@ -23,6 +23,17 @@ class GameState {
         this.sockets = {};
     }
 
+    resetGame() {
+        // resets the game besides the players 
+        this.dealer = null; 
+        this.currPlayer = null;
+        this.tableCards = [];
+        this.bet = -1;
+        this.pot = -1;
+        this.step = -1; 
+        this.count = 0; 
+    }
+
     getPlayers() {
         // get all players in the game 
         return this.players;
@@ -147,8 +158,6 @@ class GameState {
             }  
             this.hands.push(hand);
             this.sockets[this.players[i].username].emit('hand', {hand: hand});
-            // here is how to emit to a specific user: 
-            // this.sockets[this.players[i].username].emit('hello', {msg: this.players[i].username});
         }
         return true; 
     }

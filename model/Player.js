@@ -9,7 +9,7 @@ class Player {
     constructor(username, pot) {
         this.username = username;
         this.pot = pot; 
-        this.bet = 0; 
+        this.bet = 0;  
         this.playing = false; 
     }
 }

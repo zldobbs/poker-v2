@@ -18,9 +18,8 @@ class Card extends Component {
         const { cardNum } = this.props;
         let cardImageURL;
         let cardImage; 
-
         // Only load an image if there is a card at this spot
-        if (cardNum) {
+        if (cardNum && cardNum > 0 && cardNum < 53) {
             cardImageURL = require(`../assets/img/cards/${cardNum}.png`);  
             cardImage = (<img className="card-img" src={cardImageURL} alt="card"></img>);
         }

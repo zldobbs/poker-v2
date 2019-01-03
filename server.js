@@ -66,11 +66,17 @@ io.on('connection', (socket) => {
         console.log('User disconnected: ' + socket.id);
         // find user in game state's socket array to force a logout
         for (var username in app.game.sockets) {
-            if (app.game.sockets[username] == socket.id) {
+            if (app.game.sockets[username] === socket) {
+                console.log(username + ' logged out');
                 app.game.removePlayer({username: username});
                 delete app.game.sockets[username];
                 io.emit('who', { players: app.game.getPlayers() });
             }
+        }
+        // if all users leave, reset the game
+        // NOTE this should award winnings to the last remaining user 
+        if (app.game.players.length < 2) {
+            app.game.resetGame();
         }
     });
 });

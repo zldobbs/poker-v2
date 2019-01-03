@@ -137,7 +137,8 @@ class App extends Component {
     axios.post(`${endpoint}/api/game/ready`, user)
       .then((res) => {
         if (res.data.succ) {
-          this.setState({ user: res.data.user });
+          user.playing = res.data.user.playing;
+          this.setState({ user: user });
         }
         else {
           console.log("Error: " + res.data.errText); 
@@ -156,9 +157,7 @@ class App extends Component {
   componentDidMount() {
     socket.on('who', (data) => {
       // updates on current players
-      this.setState({
-        players: data.players
-      });
+      this.setState({ players: data.players });
     });
 
     socket.on('game state', (data) => {
@@ -173,6 +172,15 @@ class App extends Component {
           step: data.game.step
         }
       });
+    });
+
+    socket.on('hand', (data) => {
+      // updates the current user's hand
+      let user = this.state.user;
+      user.c1 = data.hand.c1;
+      user.c2 = data.hand.c2;
+      console.log('hand: ' + user.c1 + ', ' + user.c2);
+      this.setState({ user: user });
     });
   }
 

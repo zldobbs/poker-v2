@@ -100,6 +100,10 @@
   min-height: 100vh;
 }
 
+#user-card-box {
+  margin-top: 2vh;
+}
+
 .action-btn {
   width: 100%;
   margin-top: 5vh;
