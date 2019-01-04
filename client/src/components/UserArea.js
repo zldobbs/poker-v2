@@ -24,8 +24,12 @@ class UserArea extends Component {
                             <PlayerIcon player={this.props.player}></PlayerIcon>
                             <div className="col m10 s6">
                                 <div id="user-card-box" className="row">
-                                    <Card cardNum={this.props.player.c1}></Card>
-                                    <Card cardNum={this.props.player.c2}></Card>
+                                    <div className="col s4 push-m2">
+                                        <Card cardNum={this.props.player.c1}></Card>
+                                    </div>
+                                    <div className="col s4 push-m1">
+                                        <Card cardNum={this.props.player.c2}></Card>
+                                    </div>
                                 </div>
                                 <div className="row">
                                     <ActionBar 

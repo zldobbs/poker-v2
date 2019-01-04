@@ -32,7 +32,7 @@ class ActionBar extends Component {
             actions = (<span></span>);
         }
         return(
-            <div className="col s6 m9 push-m2">
+            <div className="col s6 m9 push-m2 push-s2">
                 { actions }
             </div>
         );

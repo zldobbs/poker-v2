@@ -107,8 +107,8 @@ router.post('/logout', (req, res) => {
             accounts[i].pot = req.body.pot; 
             updateAccountFile(accounts);
             req.app.game.removePlayer(accounts[i]);
-            req.app.io.emit('who', {players: req.app.game.getPlayers()});
             req.app.updateGameState();
+            req.app.io.emit('who', {players: req.app.game.getPlayers()});
             data = { succ: true };
             res.json(data);
         }

@@ -32,6 +32,10 @@ class GameState {
         this.pot = -1;
         this.step = -1; 
         this.count = 0; 
+        // reset players status to not playing
+        for (var i = 0; i < this.players.length; i++) {
+            this.players[i].playing = false; 
+        }
         // reset hands for any connected players
         let hand = { c1: -1, c2: -1 };
         for (var username in this.sockets) {

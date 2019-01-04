@@ -70,8 +70,8 @@ io.on('connection', (socket) => {
                 console.log(username + ' logged out');
                 app.game.removePlayer({username: username});
                 delete app.game.sockets[username];
-                io.emit('who', { players: app.game.getPlayers() });
                 app.updateGameState();
+                io.emit('who', { players: app.game.getPlayers() });
             }
         }
     });
