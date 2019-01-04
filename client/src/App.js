@@ -182,6 +182,13 @@ class App extends Component {
       console.log('hand: ' + user.c1 + ', ' + user.c2);
       this.setState({ user: user });
     });
+
+    socket.on('ready update', (data) => {
+      // updates a user's playing status based on server changes
+      let user = this.state.user;
+      user.playing = data.ready; 
+      this.setState({ user: user });
+    });
   }
 
   render() {

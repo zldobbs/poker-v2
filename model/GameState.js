@@ -40,6 +40,7 @@ class GameState {
         let hand = { c1: -1, c2: -1 };
         for (var username in this.sockets) {
             this.sockets[username].emit('hand', { hand: hand });
+            this.sockets[username].emit('ready update', { ready: false });
         }
     }
 

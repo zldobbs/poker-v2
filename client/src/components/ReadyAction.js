@@ -10,6 +10,7 @@ import 'materialize-css/dist/css/materialize.min.css';
 class ReadyAction extends Component {
     render() {
         let button;
+        console.log('ready: ' + this.props.ready);
         if (this.props.ready) {
             button = (<button onClick={this.props.handleReadyUpClick} className="btn waves-effect action-btn whiteish black-text">Ready</button>);
         }
