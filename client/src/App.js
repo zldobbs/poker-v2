@@ -54,6 +54,7 @@ class App extends Component {
     this.handleLoginClick = this.handleLoginClick.bind(this);
     this.handleRegisterClick = this.handleRegisterClick.bind(this);
     this.handleReadyUpClick = this.handleReadyUpClick.bind(this);
+    this.handleActionClick = this.handleActionClick.bind(this);
     this.switchViewToHome = this.switchViewToHome.bind(this);
   }
 
@@ -149,6 +150,23 @@ class App extends Component {
       });
   }
 
+  handleActionClick(action) {
+    // handles a user's action (fold, check, or bet)
+    const play = { user: this.state.user, action: action };
+    axios.post(`${endpoint}/api/game/action`, play)
+      .then((res) => {
+        if (res.data.succ) {
+          console.log('server acks play');
+        }
+        else {
+          console.log('failed to play');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   switchViewToHome() {
     // switches the user's view to the home page (poker table) 
     this.setState({ view: 'GamePage' });
@@ -219,7 +237,8 @@ class App extends Component {
               <UserArea 
                 player={this.state.user} 
                 tableState={this.state.tableState}
-                handleReadyUpClick={this.handleReadyUpClick}>
+                handleReadyUpClick={this.handleReadyUpClick}
+                handleActionClick={this.handleActionClick}>
               </UserArea>
             </div>
           );

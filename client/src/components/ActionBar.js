@@ -26,7 +26,7 @@ class ActionBar extends Component {
             actions = (<ReadyAction handleReadyUpClick={this.props.handleReadyUpClick} ready={this.props.player.playing} />);
         }
         else if (this.props.tableState.currPlayer.username === this.props.player.username) {
-            actions = (<PlayAction />);
+            actions = (<PlayAction handleActionClick={this.props.handleActionClick} />);
         }
         else {
             actions = (<span></span>);

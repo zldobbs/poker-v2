@@ -35,7 +35,8 @@ class UserArea extends Component {
                                     <ActionBar 
                                         player={this.props.player}
                                         tableState={this.props.tableState} 
-                                        handleReadyUpClick={this.props.handleReadyUpClick}>
+                                        handleReadyUpClick={this.props.handleReadyUpClick}
+                                        handleActionClick={this.props.handleActionClick}>
                                     </ActionBar>    
                                 </div>
                             </div>

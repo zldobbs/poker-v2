@@ -40,4 +40,30 @@ router.post('/ready', (req, res) => {
     res.json(data);
 });
 
+// POST::play
+// handle the user's action and update game accordingly 
+router.post('/action', (req, res) => {
+    let data; 
+    switch(req.body.action) {
+        case 0: 
+            console.log(req.body.user.username + ' folds');
+            req.app.game.handleFold(req.body.user);
+            break;
+        case 1:
+            console.log(req.body.user.username + ' checks');
+            req.app.game.handleCheck(req.body.user);
+            break;
+        case 2:
+            console.log(req.body.user.username + ' bets');
+            req.app.game.handleBet(req.body.user);
+            break;
+        default:
+            console.log('Error: unknown user action');
+            break;
+    }
+    data = { succ: true };
+    req.app.updateGameState();
+    res.json(data);
+});
+
 module.exports = router;
