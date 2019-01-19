@@ -186,7 +186,6 @@ class GameState {
         // count should not change here since active players will decrease 
         if (user.username == this.currPlayer.username) {
             this.activePlayers.splice(index, 1); 
-            this.updateTableState();
         }
         else {
             console.log('Error: ' + user.username + ' tried to fold, but it is ' + this.activePlayers[index].username + ' turn');
@@ -204,8 +203,7 @@ class GameState {
         // check if the correct user is attempting an action
         if (user.username == this.currPlayer.username) {
             // count increments since this is a valid play
-            this.count++; 
-            this.updateTableState();    
+            this.count++;     
         }
         else {
             // unauthorized 
@@ -222,8 +220,7 @@ class GameState {
             // count reset to 0, every active player gets a chance to play again 
             let index = (this.startIndex + this.count) % this.activePlayers.length;
             this.startIndex = index;
-            this.count = 1;
-            this.updateTableState(); 
+            this.count = 1; 
         }
         else {
             // unauthorized 

@@ -58,11 +58,13 @@ router.post('/action', (req, res) => {
             req.app.game.handleBet(req.body.user);
             break;
         default:
-            console.log('Error: unknown user action');
+            data = { succ: false, err: true, errText: "Unknown user attempted action" };
             break;
     }
-    data = { succ: true };
-    req.app.updateGameState();
+    if (!data) {
+        req.app.game.updateTableState();
+        req.app.updateGameState();
+    }
     res.json(data);
 });
 
