@@ -17,7 +17,7 @@ const profileImageURL = require('../assets/img/blank-profile-picture.png');
 class PlayerIcon extends Component {
     render() {
         return(
-            <div className="col s6 m2">
+            <div className="col m2 s6">
                 <div className="player-icon">
                     <p className="player-username">{this.props.player.username}</p>
                     <img className="player-profile-pic" src={profileImageURL} alt="profile-pic" />

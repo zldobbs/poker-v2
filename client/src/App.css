@@ -98,6 +98,7 @@
 
 #user-area {
   min-height: 100vh;
+  overflow-y: scroll;
 }
 
 #user-card-box {
@@ -106,7 +107,7 @@
 
 .action-btn {
   width: 100%;
-  margin-top: 5vh;
+  margin-top: 3vh;
 }
 
 .action-btn:hover {

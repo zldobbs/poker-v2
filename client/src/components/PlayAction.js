@@ -16,13 +16,13 @@ class PlayAction extends Component {
         const handleClick = ((action) => (event) => this.props.handleActionClick(action));
         return(
             <div className="row center">
-                <div className="col s12 m3">
+                <div className="col s12">
                     <button onClick={handleClick(0)} className="btn waves-effect action-btn redish">Fold</button>
                 </div>
-                <div className="col s12 m3">
+                <div className="col s12">
                     <button onClick={handleClick(1)} className="btn waves-effect action-btn blueish-lt black-text">Check</button>
                 </div>
-                <div className="col s12 m3">
+                <div className="col s12">
                     <button onClick={handleClick(2)} className="btn waves-effect action-btn blueish-dk">Bet</button>
                 </div>
             </div>

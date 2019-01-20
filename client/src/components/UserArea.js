@@ -19,18 +19,20 @@ class UserArea extends Component {
         return(
             <div id="user-area" className="blackish white-text">
                 <div className="row">
-                    <div className="col s12 m6 push-m3 center">
+                    <div className="col s12 m8 push-m2 center">
                         <div className="row">
-                            <PlayerIcon player={this.props.player}></PlayerIcon>
-                            <div className="col m10 s6">
+                            <div className="col m4 s12">
                                 <div id="user-card-box" className="row">
-                                    <div className="col s4 push-m2">
+                                    <div className="col s6 push-s2 push-m1">
                                         <Card cardNum={this.props.player.c1}></Card>
                                     </div>
-                                    <div className="col s4 push-m1">
+                                    <div className="col s6">
                                         <Card cardNum={this.props.player.c2}></Card>
                                     </div>
                                 </div>
+                            </div>
+                            <PlayerIcon player={this.props.player}></PlayerIcon>
+                            <div className="col m4 s6">
                                 <div className="row">
                                     <ActionBar 
                                         player={this.props.player}

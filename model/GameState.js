@@ -185,7 +185,7 @@ class GameState {
         // handles a user folding, updates game state accordingly
         // count should not change here since active players will decrease 
         if (user.username == this.currPlayer.username) {
-            this.activePlayers.splice(index, 1); 
+            // this.activePlayers.splice(index, 1); 
         }
         else {
             console.log('Error: ' + user.username + ' tried to fold, but it is ' + this.activePlayers[index].username + ' turn');
