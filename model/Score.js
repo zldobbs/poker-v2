@@ -67,10 +67,9 @@ class Score {
             j = 0; 
             while (j < best[0].score.data.length && quit == 0) {
                 // loop through kicker cards to break the tie 
-                if (best[0].score.data[j] < hands[i].score.data[j]) {
+                if (best[0].score.base < hands[i].score.base || best[0].score.data[j] < hands[i].score.data[j]) {
                     quit = 1; 
-                    best = [];
-                    best.push(hands[i]);
+                    best = [hands[i]];
                 }
                 else if (best[0].score.data[j] == hands[i].score.data[j]) {
                     if (j == best[0].score.data.length - 1) {
@@ -91,8 +90,8 @@ class Score {
     scoreFlush(cards) {
         // scores a given flush. checks for a royal flush or straight flush as well 
         // check if the flush is a straight 
-        let straight = straightCheck(cards);
-        let score; 
+        let straight = this.straightCheck(cards);
+        var score; 
         if (straight.check == 1) {
             if (straight.hc == 13) {
                 // royal flush  
@@ -110,29 +109,6 @@ class Score {
         return score; 
     }
 
-    scoreGame(hands, tableCards) {
-        // score each hand, determine who the overall winner is 
-        let cards; 
-        let score; 
-        // winners will be an array in case of a tie 
-        let winners = [];
-        let winner; 
-        for (var i = 0; i < hands.length; i++) {
-            cards = tableCards.slice();
-            cards.push(hands[i].c1);
-            cards.push(hands[i].c2);
-            score = scoreHand(cards);
-            // check if it is the new highest score 
-            if (score.base >= winners[0].score.base) {
-                if (score > winners[0].score.base) winners = [];
-                winner = { hand: hands[i], score: score,  };
-                winners.push(winner);
-            }
-        }
-        if (winners.length > 1) tieBreak(winners);
-        return winners; 
-    }
-
     scoreHand(cards) {
         // scores an individual hand
         // cards13 is the base value of each card (ignore suit) 
@@ -146,32 +122,34 @@ class Score {
         cards.sort((a,b) => a-b);
         cards13.sort((a,b) => a-b);
         // base score, the hand a user has (SEE ABOVE FOR HAND SCORES)
-        let score; 
+        var score; 
         // kicker values to break ties 
         let kicker = [];
-        let pairs = [], triples =[], singles = [];
+        let pairs = [], triples = [], singles = [];
         // loop through the hand looking at values to check for duplicate cards 
-        let i = 0; 
+        var i = 0; 
         while (i < cards13.length) {
             // count the occurrences of the current card 
-            var occurrences = cards13.reduce((n, val) => {
-                return n + (val === cards13[i]);
-            });
+            var num = cards13[i]; 
+            var occurrences = 0; 
+            while (i < cards13.length && cards13[i] == num) {
+                i++;
+                occurrences++; 
+            }
+            // FIXME decrement to get right value. update again after
+            i--;
             switch(occurrences) {
                 case 1:
                     // single card
                     singles.push(cards13[i]);
-                    i++;
                     break;
                 case 2:
                     // pair 
                     pairs.push(cards13[i]);
-                    i += 2; 
                     break;
                 case 3:
                     // 3 of a kind
                     triples.push(cards13[i]);
-                    i += 3;
                     break;
                 case 4:
                     // 4 of a kind
@@ -181,10 +159,12 @@ class Score {
                 default:
                     console.log('Error: user had ' + occurrences + ' of ' + cards13[i]);
                     score = { base: -1, data: [] };
+                    i = cards13.length + 1;
                     break;
             }
+            i++;
         }
-        if (score.base) return score; 
+        if (score) return score; 
         // check for a full house 
         // check from the back since they will be the highest values 
         for (var j = triples.length - 1; j >= 0; j--) {
@@ -222,12 +202,12 @@ class Score {
             }
         }
         // if any of the suits have more than 5 cards, score the hand 
-        if (c.length >= 5) return scoreFlush(c);
-        if (d.length >= 5) return scoreFlush(d);
-        if (h.length >= 5) return scoreFlush(h);
-        if (s.length >= 5) return scoreFlush(s);
+        if (c.length >= 5) return this.scoreFlush(c);
+        if (d.length >= 5) return this.scoreFlush(d);
+        if (h.length >= 5) return this.scoreFlush(h);
+        if (s.length >= 5) return this.scoreFlush(s);
         // check for a straight 
-        let straight = straightCheck(cards13);
+        let straight = this.straightCheck(cards13);
         if (straight.check == 1) {
             score = { base: 5, data: [straight.hc] };
             return score; 
@@ -269,8 +249,36 @@ class Score {
             }
         }
         // at this point, the user only has a high card 
-        score = { base: 1, data: cards13.splice(2, 5) };
+        score = { base: 1, data: cards13.splice(2, 5).sort((a,b) => b-a) };
         return score; 
+    }
+
+    scoreGame(hands, tableCards) {
+        // score each hand, determine who the overall winner is 
+        let cards; 
+        let score; 
+        // winners will be an array in case of a tie 
+        let winners = [];
+        let winner; 
+        for (var i = 0; i < hands.length; i++) {
+            cards = tableCards.slice();
+            cards.push(hands[i].c1);
+            cards.push(hands[i].c2);
+            score = this.scoreHand(cards);
+            // set original high score 
+            if (winners.length == 0) {
+                winner = { hand: hands[i], score: score,  };
+                winners.push(winner);
+            }
+            // check if it is the new highest score 
+            else if (score.base >= winners[0].score.base) {
+                if (score.base > winners[0].score.base) winners = [];
+                winner = { hand: hands[i], score: score,  };
+                winners.push(winner);
+            }
+        }
+        if (winners.length > 1) winners = this.tieBreak(winners);
+        return winners; 
     }
 }
 

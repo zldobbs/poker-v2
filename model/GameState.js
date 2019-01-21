@@ -7,10 +7,11 @@
 
 const Deck = require('./Deck');
 const Hand = require('./Hand');
+const Score = require('./Score');
 
 class GameState {
     constructor() {
-        this.deck = new Deck; 
+        this.deck = new Deck;
         this.dealer = null; 
         this.dealerIndex = -1;
         this.tempDealerIndex = -1; 
@@ -256,6 +257,12 @@ class GameState {
                     break;
                 case 4:
                     // score
+                    console.log(this.hands);
+                    var score = new Score;
+                    // FIXME winners isnt getting erased... why?
+                    var winners = score.scoreGame(this.hands, this.tableCards);
+                    console.log('winners');
+                    console.log(winners);
                     this.preFlop();
                     break;
                 default:
@@ -294,6 +301,7 @@ class GameState {
         this.dealerIndex++; 
         if (this.dealerIndex > this.activePlayers.length-1) this.dealerIndex = 0; 
         this.dealer = this.activePlayers[this.dealerIndex];
+        this.hands = [];
         // tempDealerIndex will track the origin of play during the current game
         this.tempDealerIndex = this.dealerIndex;
         // set the currPlayer to one to the left of the dealer
