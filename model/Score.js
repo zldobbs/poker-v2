@@ -20,18 +20,94 @@
 
 class Score {
     straightCheck(cards) {
-        // checks if the given cards are a straight 
-        
+        // checks if the given cards are a straight
+        // NOTE this function expects cards to be sent in their mod 13 version
+        // i.e. suit should be ignored. only values 1-13 should be seen in the parameter 
+        let streak = 0; 
+        let check = 0; 
+        let highCard = 0; 
+        for (var i = 0; i < cards.length - 1; i++) {
+            if ((cards[i] + 1) == cards[i+1]) {
+                streak++;
+                if (streak >= 4) {
+                    // straight found
+                    highCard = cards[i+1]; 
+                    check = 1; 
+                }
+            }
+            else if (cards[i] == 4 && streak >= 3) {
+                // handle the case where the ace is low in the straight 
+                for (var j = i + 1; j < cards.length; j++) {
+                    if (cards[j] == 13) {
+                        streak++;
+                        if (streak >= 4) {
+                            // highCard should always be 4 here 
+                            highCard = 4;
+                            check = 1; 
+                        }
+                    }
+                } 
+            }
+            else {
+                streak = 0; 
+            }
+        }
+        let result = { check: check, hc: highCard };
+        return result; 
     }
 
     tieBreak(hands) {
         // breaks a tie between two hands 
-
+        let best = [];
+        let quit = 0; 
+        let j = 0; 
+        best.push(hands[0]);
+        for (var i = 1; i < hands.length; i++) {
+            quit = 0; 
+            j = 0; 
+            while (j < best[0].score.data.length && quit == 0) {
+                // loop through kicker cards to break the tie 
+                if (best[0].score.data[j] < hands[i].score.data[j]) {
+                    quit = 1; 
+                    best = [];
+                    best.push(hands[i]);
+                }
+                else if (best[0].score.data[j] == hands[i].score.data[j]) {
+                    if (j == best[0].score.data.length - 1) {
+                        // an unbreakable tie has been found 
+                        quit = 1; 
+                        best.push(hands[i]);
+                    }
+                    j++; 
+                }
+                else {
+                    quit = 1; 
+                }
+            }
+        }
+        return best; 
     }
 
     scoreFlush(cards) {
         // scores a given flush. checks for a royal flush or straight flush as well 
-
+        // check if the flush is a straight 
+        let straight = straightCheck(cards);
+        let score; 
+        if (straight.check == 1) {
+            if (straight.hc == 13) {
+                // royal flush  
+                score = { base: 10, data: [] };
+            }  
+            else {
+                // straight flush
+                score = { base: 9, data: [straight.hc] };
+            }
+        }
+        else {
+            // flush (no straight)
+            score = { base: 6, data: [cards[cards.length - 1]] };
+        }
+        return score; 
     }
 
     scoreGame(hands, tableCards) {
@@ -114,7 +190,7 @@ class Score {
         for (var j = triples.length - 1; j >= 0; j--) {
             for (var k = pairs.length - 1; k >=0; k--) {
                 if (triples[j] != pairs[k]) {
-                    score = { base: 7, data: [pairs[k], triples[j]] };
+                    score = { base: 7, data: [triples[j], pairs[k]] };
                     return score; 
                 }
             }
