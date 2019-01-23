@@ -181,6 +181,7 @@ class App extends Component {
     socket.on('game state', (data) => {
       // updates the entire game state to reflect backend 
       this.setState({
+        statusMsg: 'Poker',
         tableState: {
           dealer: data.game.dealer,
           currPlayer: data.game.currPlayer,
@@ -190,6 +191,15 @@ class App extends Component {
           step: data.game.step
         }
       });
+      // check if there is a new winner
+      if (data.game.winners.length > 0) {
+        var winners = data.game.winners[0].hand.username;
+        for (var i = 1; i < data.game.winners.length; i++) {
+          winners += ', ' + data.game.winners[i].hand.username;
+        }
+        winners += ' has won the pot!';
+        this.setState({ statusMsg: winners });
+      }
     });
 
     socket.on('hand', (data) => {

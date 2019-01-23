@@ -12,6 +12,7 @@ const Score = require('./Score');
 class GameState {
     constructor() {
         this.deck = new Deck;
+        this.winners = [];
         this.dealer = null; 
         this.dealerIndex = -1;
         this.tempDealerIndex = -1; 
@@ -30,6 +31,7 @@ class GameState {
 
     resetGame() {
         // resets the game besides the players 
+        this.winners = [];
         this.dealer = null; 
         this.dealerIndex = -1;
         this.tempDealerIndex = -1;
@@ -257,13 +259,7 @@ class GameState {
                     break;
                 case 4:
                     // score
-                    console.log(this.hands);
-                    var score = new Score;
-                    // FIXME winners isnt getting erased... why?
-                    var winners = score.scoreGame(this.hands, this.tableCards);
-                    console.log('winners');
-                    console.log(winners);
-                    this.preFlop();
+                    this.awards();
                     break;
                 default:
                     // pre game
@@ -276,11 +272,7 @@ class GameState {
             let index = (this.startIndex + this.count) % this.activePlayers.length;
             // just change the curr player
             this.currPlayer = this.activePlayers[index];
-            console.log('dealer=' + this.tempDealerIndex + ', ' + this.dealer.username);
-            console.log('start of play=' + this.startIndex + ', ' + this.activePlayers[this.startIndex]);
-            console.log('curr=' + index + ', ' + this.currPlayer.username);
         }
-        console.log('cards: ' + this.tableCards);
     }
 
     resetBet() {
@@ -291,7 +283,8 @@ class GameState {
 
     preFlop() {
         // initial game state. no cards on table, every player gets 2 cards dealt
-        this.step = 0;  
+        this.step = 0;
+        this.winners = [];  
         this.resetBet();
         // reset cards
         this.tableCards = [];
@@ -353,6 +346,20 @@ class GameState {
         let index = (this.tempDealerIndex + 1) % this.activePlayers.length; 
         this.startIndex = index; 
         this.currPlayer = this.activePlayers[index];
+    }
+
+    awards() {
+        var score = new Score;
+        var username; 
+        this.winners = score.scoreGame(this.hands, this.tableCards);
+        this.currPlayer = null;
+         // reset players status to not playing
+         for (var i = 0; i < this.players.length; i++) {
+            this.players[i].playing = false; 
+            username = this.players[i].username; 
+            this.sockets[username].emit('ready update', { ready: false });
+        }
+        this.step = -1; 
     }
 }
 

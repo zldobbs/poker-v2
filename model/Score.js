@@ -136,7 +136,8 @@ class Score {
                 i++;
                 occurrences++; 
             }
-            // FIXME decrement to get right value. update again after
+            // decrement to get right value. update again after
+            // FIXME this seems sloppy. should be a better way to do this 
             i--;
             switch(occurrences) {
                 case 1:

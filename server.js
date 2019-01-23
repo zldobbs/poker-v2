@@ -38,6 +38,7 @@ app.game = gameState;
 app.updateGameState = function updateGameState() {
     let game = app.game; 
     let gamestate = {
+        winners: game.winners, 
         dealer: game.dealer,
         currPlayer: game.currPlayer,
         tableCards: game.tableCards,
