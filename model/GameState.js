@@ -199,6 +199,8 @@ class GameState {
     }
 
     handleFold(user) {
+        // NOTE may not be properly changing dealer when leaving.
+        // notice some issues where one player will be skipped and another will get an extra turn after someone folds
         // handles a user folding, updates game state accordingly
         // count should not change here since active players will decrease 
         var index = (this.startIndex + this.count) % this.activePlayers.length;
