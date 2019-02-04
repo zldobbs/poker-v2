@@ -62,7 +62,9 @@ router.post('/action', (req, res) => {
             break;
     }
     if (!data) {
+        console.log('should update');
         req.app.game.updateTableState();
+        console.log('winner: ' + req.app.game.winners);
         req.app.updateGameState();
     }
     res.json(data);

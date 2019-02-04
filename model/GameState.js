@@ -187,8 +187,16 @@ class GameState {
     handleFold(user) {
         // handles a user folding, updates game state accordingly
         // count should not change here since active players will decrease 
+        var index = (this.startIndex + this.count) % this.activePlayers.length;
         if (user.username == this.currPlayer.username) {
-            // this.activePlayers.splice(index, 1); 
+            this.activePlayers.splice(index, 1); 
+            console.log(this.activePlayers);
+            if (this.activePlayers.length <= 1) {
+                // set step to 3 because updateTableStatus will be called 
+                // this will send to awards
+                this.count = 999;
+                this.step = 3; 
+            }
         }
         else {
             console.log('Error: ' + user.username + ' tried to fold, but it is ' + this.activePlayers[index].username + ' turn');
@@ -351,7 +359,20 @@ class GameState {
     awards() {
         var score = new Score;
         var username; 
-        this.winners = score.scoreGame(this.hands, this.tableCards);
+        var activeHands = [];
+        for (var i = 0; i < this.activePlayers.length; i++) {
+            var j = 0; 
+            while (this.activePlayers[i].username != this.hands[j].username && j < this.hands.length) {
+                j++;
+            }
+            if (j < this.hands.length) {
+                activeHands.push(this.hands[j]);
+            }
+            else {
+                console.log('Error players hand not found: ' + this.activePlayers[i].username);
+            }
+        }
+        this.winners = score.scoreGame(activeHands, this.tableCards);
         this.currPlayer = null;
          // reset players status to not playing
          for (var i = 0; i < this.players.length; i++) {
@@ -359,7 +380,7 @@ class GameState {
             username = this.players[i].username; 
             this.sockets[username].emit('ready update', { ready: false });
         }
-        this.step = -1; 
+        this.step = -1;
     }
 }
 

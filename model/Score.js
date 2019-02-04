@@ -261,6 +261,10 @@ class Score {
         // winners will be an array in case of a tie 
         let winners = [];
         let winner; 
+        if (hands.length == 1) {
+            winners = [{ hand: hands[0], score: 10 }];
+            return winners;
+        }
         for (var i = 0; i < hands.length; i++) {
             cards = tableCards.slice();
             cards.push(hands[i].c1);
@@ -268,13 +272,13 @@ class Score {
             score = this.scoreHand(cards);
             // set original high score 
             if (winners.length == 0) {
-                winner = { hand: hands[i], score: score,  };
+                winner = { hand: hands[i], score: score };
                 winners.push(winner);
             }
             // check if it is the new highest score 
             else if (score.base >= winners[0].score.base) {
                 if (score.base > winners[0].score.base) winners = [];
-                winner = { hand: hands[i], score: score,  };
+                winner = { hand: hands[i], score: score };
                 winners.push(winner);
             }
         }
