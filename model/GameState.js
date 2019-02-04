@@ -68,9 +68,10 @@ class GameState {
     handlePlayerLeave() {
         // update the status of the game when a user leaves the game 
         // if all users leave, reset the game
-        // FIXME need to account for player leaving mid game 
         if (this.players.length < 2) {
-            this.resetGame();
+            this.step = 3;
+            this.count = 999;
+            this.updateTableState();
             return; 
         }
         // if the step is -1, we need to check if we're ready 
@@ -94,14 +95,27 @@ class GameState {
         }
         // remove from active players list as well if they applicable
         if (playing) {
-            // TODO if the user is the currPlayer/dealer, need to change to next player 
-            let activePlayers = this.activePlayers;
+            var index = (this.startIndex + this.count) % this.activePlayers.length;
+            var activePlayers = this.activePlayers;
+            var hands = this.hands; 
             for (var i = 0; i < activePlayers.length; i++) {
+                if (hands[i] && player.username.toLowerCase() == hands[i].username.toLowerCase()) {
+                    hands.splice(i, 1);
+                    this.hands = hands; 
+                }
                 if (player.username.toLowerCase() == activePlayers[i].username.toLowerCase()) {
-                    activePlayers.splice(i, 1);
+                    if (this.currPlayer && this.currPlayer.username.toLowerCase() == activePlayers[i].username.toLowerCase()) {
+                        // user who left is the current player
+                        this.handleFold(activePlayers[i]);
+                        this.currPlayer = this.activePlayers[index];
+                        this.updateTableState();
+                    }
+                    else {
+                        activePlayers.splice(i, 1);
+                        this.activePlayers = activePlayers;
+                    }
                 }
             }
-            this.activePlayers = activePlayers;
         }
         this.players = players; 
         this.handlePlayerLeave();
@@ -141,7 +155,7 @@ class GameState {
     toggleReady(username) {
         // inverts the given user's playing status
         for (var i = 0; i < this.players.length; i++) {
-            if (this.players[i].username === username) {
+            if (this.players[i].username.toLowerCase() === username.toLowerCase()) {
                 this.players[i].playing = !this.players[i].playing;
                 return this.players[i]; 
             }
@@ -152,7 +166,7 @@ class GameState {
     setReady(username) {
         // sets the given user to playing
         for (var i = 0; i < this.players.length; i++) {
-            if (this.players[i].username === username) {
+            if (this.players[i].username.toLowerCase() === username.toLowerCase()) {
                 this.players[i].playing = true;
                 return this.players[i]; 
             }
@@ -163,7 +177,7 @@ class GameState {
     unsetReady(username) {
         // set the given user to not ready
         for (var i = 0; i < this.players.length; i++) {
-            if (this.players[i].username === username) {
+            if (this.players[i].username.toLowerCase() === username.toLowerCase()) {
                 this.players[i].playing = false;
                 return this.players[i]; 
             }
@@ -188,7 +202,7 @@ class GameState {
         // handles a user folding, updates game state accordingly
         // count should not change here since active players will decrease 
         var index = (this.startIndex + this.count) % this.activePlayers.length;
-        if (user.username == this.currPlayer.username) {
+        if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
             this.activePlayers.splice(index, 1); 
             console.log(this.activePlayers);
             if (this.activePlayers.length <= 1) {
@@ -201,18 +215,12 @@ class GameState {
         else {
             console.log('Error: ' + user.username + ' tried to fold, but it is ' + this.activePlayers[index].username + ' turn');
         }
-        // TODO handle when the user folds mid game
-        // account for when the last player folds and there is only 1 person left
-        // should do all of this in handlePlayerLeave?
-        // no, whenever a user leaves the game, call this function as though they had just folded 
-        // then call the removeplayer function. although this could get confusing if they are not the 
-        // currplayer 
     }
 
     handleCheck(user) {
         // handles a user checking (or calling), updates game state accordingly
         // check if the correct user is attempting an action
-        if (user.username == this.currPlayer.username) {
+        if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
             // count increments since this is a valid play
             this.count++;     
         }
@@ -227,7 +235,7 @@ class GameState {
         // this 
         // handles a user betting (or raising), updates game state accordingly
         // FIXME player does not advance if the person betting is the first to play 
-        if (user.username == this.currPlayer.username) {
+        if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
             // count reset to 0, every active player gets a chance to play again 
             let index = (this.startIndex + this.count) % this.activePlayers.length;
             this.startIndex = index;
@@ -362,8 +370,10 @@ class GameState {
         var activeHands = [];
         for (var i = 0; i < this.activePlayers.length; i++) {
             var j = 0; 
-            while (this.activePlayers[i].username != this.hands[j].username && j < this.hands.length) {
-                j++;
+            if (this.hands.length > 0) {
+                while (this.activePlayers[i].username.toLowerCase() != this.hands[j].username.toLowerCase() && j < this.hands.length) {
+                    j++;
+                }    
             }
             if (j < this.hands.length) {
                 activeHands.push(this.hands[j]);

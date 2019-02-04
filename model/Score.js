@@ -256,6 +256,7 @@ class Score {
 
     scoreGame(hands, tableCards) {
         // score each hand, determine who the overall winner is 
+        if (hands.length == 0) return []; 
         let cards; 
         let score; 
         // winners will be an array in case of a tie 
