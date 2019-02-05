@@ -18,11 +18,23 @@ import PlayerIcon from './PlayerIcon.js';
 class PlayersArea extends Component {
     render() {
         let playerIcons = [];
+        var dealer;
+        var currPlayer; 
         let players = this.props.players ? this.props.players : [];
         for (let i = 0; i < players.length; i++) {
+            dealer = false; 
+            currPlayer = false; 
+            if (this.props.tableState) {
+                if (this.props.tableState.dealer && this.props.players[i].username === this.props.tableState.dealer.username) {
+                    dealer = true; 
+                }
+                if (this.props.tableState.currPlayer && this.props.players[i].username === this.props.tableState.currPlayer.username) {
+                    currPlayer = true; 
+                }
+            }
             playerIcons.push(
-                <PlayerIcon key={i} player={this.props.players[i]}></PlayerIcon>
-            );
+                <PlayerIcon key={i} player={this.props.players[i]} currPlayer={currPlayer} dealer={dealer}></PlayerIcon>
+            );    
             console.log('pushed ' + this.props.players[i].username);
         }
         let area;

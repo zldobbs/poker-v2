@@ -16,11 +16,14 @@ const profileImageURL = require('../assets/img/blank-profile-picture.png');
 // Pass into icon the player's cards, 
 class PlayerIcon extends Component {
     render() {
+        let classOption = 'player-profile-pic';
+        if (this.props.currPlayer) classOption += ' currPlayer';
+        let dealer = this.props.dealer ? <div id="dealer-chip" className="z-depth-1">D</div> : <span></span>;
         return(
             <div className="col m2 s6">
                 <div className="player-icon">
-                    <p className="player-username">{this.props.player.username}</p>
-                    <img className="player-profile-pic" src={profileImageURL} alt="profile-pic" />
+                    <p className="player-username">{this.props.player.username}{dealer}</p>
+                    <img className={classOption} src={profileImageURL} alt="profile-pic" />
                     <p>Bank: ${this.props.player.pot}</p>
                     <p>Bet: ${this.props.player.bet}</p>
                 </div>

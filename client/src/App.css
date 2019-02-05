@@ -115,6 +115,24 @@
   background-color: white; 
 }
 
+.currPlayer {
+  border: 3px solid #FE5F55;
+  border-radius: 50%;
+}
+
+#dealer-chip {
+  background-color: #F7F7FF;
+  border-radius: 50%;
+  border: 1px solid #495867;
+  font-weight: bold;
+  color: #495867;
+  min-height: 25px;
+  min-width: 25px;
+  text-align: center;
+  margin-left: 5px;
+  display: inline-block;
+}
+
 /* General css */
 
 html {
