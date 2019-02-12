@@ -213,6 +213,12 @@ class GameState {
                 this.count = 999;
                 this.step = 3; 
             }
+            else {
+                if (index === this.tempDealerIndex) {
+                    // if the 'current' dealer folds, update
+                    this.tempDealerIndex = (this.tempDealerIndex - 1) % this.activePlayers.length;
+                }
+            }
         }
         else {
             console.log('Error: ' + user.username + ' tried to fold, but it is ' + this.activePlayers[index].username + ' turn');
