@@ -25,6 +25,15 @@ class PlayAction extends Component {
                 <div className="col s12">
                     <button onClick={handleClick(2)} className="btn waves-effect action-btn blueish-dk">Bet</button>
                 </div>
+                <div className="col s4 center">
+                    <button className="btn-floating btn-small action-btn redish"><i className="material-icons">keyboard_arrow_down</i></button>
+                </div>
+                <div className="col s4 center valign-wrapper">
+                    <p id="bet-text">$100</p>
+                </div>
+                <div className="col s4 center">
+                    <button className="btn-floating btn-small action-btn redish"><i className="material-icons">keyboard_arrow_up</i></button>
+                </div>
             </div>
         );
     }

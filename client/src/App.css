@@ -110,9 +110,15 @@
   margin-top: 3vh;
 }
 
-.action-btn:hover {
+.action-btn:hover, .material-icons:hover {
   color: black;
   background-color: white; 
+}
+
+#bet-text {
+  margin: 0 auto;
+  margin-top: 3vh;  
+  font-size: 1.5rem;
 }
 
 .currPlayer {
