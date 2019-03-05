@@ -8,6 +8,44 @@ import React, { Component } from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
 
 class PlayAction extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            bet: 0,
+            pot: this.props.playerPot,
+            tableBet: this.props.tableBet
+        }
+
+        this.increaseBet = this.increaseBet.bind(this);
+        this.decreaseBet = this.decreaseBet.bind(this);
+    }
+
+    /*
+        increasing and decreasing bets by a constant amount 
+        checking on both frontend and backend for valid bet amounts 
+        TODO make bet amount editable text to allow for easier changes 
+    */
+
+    increaseBet() {
+        let { bet } = this.state; 
+        bet += 10; 
+        // can't have a bet that is greater than the user's money pot 
+        if (this.state.pot >= bet) {
+            this.setState({ bet: bet });
+        }
+    }
+
+    decreaseBet() {
+        let { bet } = this.state;
+        bet -= 10; 
+        console.log(bet);
+        console.log(this.state.tableBet);
+        // can't have a bet lower than 0 or the current bet amount  
+        if (this.state.tableBet <= bet) {
+            this.setState({ bet: bet });
+        }
+    }
+
     render() {
         // declare handleClick so that different actions can be passed up in one function
         // action = 0 -> user folds 
@@ -26,13 +64,13 @@ class PlayAction extends Component {
                     <button onClick={handleClick(2)} className="btn waves-effect action-btn blueish-dk">Bet</button>
                 </div>
                 <div className="col s4 center">
-                    <button className="btn-floating btn-small action-btn redish"><i className="material-icons">keyboard_arrow_down</i></button>
+                    <button className="btn-floating btn-small action-btn redish" onClick={this.decreaseBet}><i className="material-icons">keyboard_arrow_down</i></button>
                 </div>
                 <div className="col s4 center valign-wrapper">
-                    <p id="bet-text">$100</p>
+                    <p id="bet-text">${this.state.bet}</p>
                 </div>
                 <div className="col s4 center">
-                    <button className="btn-floating btn-small action-btn redish"><i className="material-icons">keyboard_arrow_up</i></button>
+                    <button className="btn-floating btn-small action-btn redish" onClick={this.increaseBet}><i className="material-icons">keyboard_arrow_up</i></button>
                 </div>
             </div>
         );

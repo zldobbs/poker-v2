@@ -22,7 +22,7 @@ class PlayerIcon extends Component {
         return(
             <div className="col m2 s6">
                 <div className="player-icon">
-                    <p className="player-username">{this.props.player.username}{dealer}</p>
+                    <p className="player-username">{this.props.player.username}</p>{dealer}
                     <img className={classOption} src={profileImageURL} alt="profile-pic" />
                     <p>Bank: ${this.props.player.pot}</p>
                     <p>Bet: ${this.props.player.bet}</p>
