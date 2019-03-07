@@ -56,7 +56,7 @@ router.post('/action', (req, res) => {
             break;
         case 2:
             console.log(req.body.user.username + ' bets');
-            req.app.game.handleBet(req.body.user);
+            req.app.game.handleBet(req.body.user, req.body.bet);
             break;
         default:
             data = { succ: false, err: true, errText: "Unknown user attempted action" };

@@ -238,16 +238,38 @@ class GameState {
         }
     }
 
-    handleBet(user) {
+    handleBet(user, bet) {
         // TODO FIXME need a temporary dealer index to keep track of the current origin of play 
         // this 
         // handles a user betting (or raising), updates game state accordingly
         // FIXME player does not advance if the person betting is the first to play 
+        // FIXME user bet amounts are not being properly updated on frontend 
+        //       weird implementation is fucking everything up.. KISS dummy 
         if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
-            // count reset to 0, every active player gets a chance to play again 
-            let index = (this.startIndex + this.count) % this.activePlayers.length;
-            this.startIndex = index;
-            this.count = 1; 
+            // check if the bet is valid 
+            if (bet <= this.currPlayer.pot && bet >= this.bet) {
+                // get the index of the currPlayer to update 
+                let index = (this.startIndex + this.count) % this.activePlayers.length;
+                if (this.activePlayers[index].username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
+                    this.activePlayers[index].bet = bet;
+                    this.activePlayers[index].pot -= bet; 
+                    this.bet = bet; 
+                    this.currPlayer = this.activePlayers[index];
+                    console.log(this.currPlayer.bet + ', ' + this.currPlayer.pot);
+                    // count reset to 0, every active player gets a chance to play again 
+                    this.startIndex = index;
+                    this.count = 1; 
+                }
+                else {
+                    // error
+                    console.log(this.activePlayers[index].username + ' is not ' + this.currPlayer.username);
+                }
+            }
+            else {
+                // invalid bet 
+                console.log(user.username + ' attempted invalid bet: ' + bet);
+                console.log('pot: ' + this.currPlayer.bet + ', table bet: ' + this.bet);
+            }
         }
         else {
             // unauthorized 

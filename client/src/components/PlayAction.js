@@ -11,7 +11,7 @@ class PlayAction extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            bet: 0,
+            bet: 100,
             pot: this.props.playerPot,
             tableBet: this.props.tableBet
         }

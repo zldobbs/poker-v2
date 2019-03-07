@@ -47,6 +47,7 @@ app.updateGameState = function updateGameState() {
         step: game.step
     }
     io.emit('game state', { game: gamestate });
+    io.emit('who', { players: game.activePlayers });
 }
 
 // socket-io connections handled here

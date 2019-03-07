@@ -176,6 +176,16 @@ class App extends Component {
     socket.on('who', (data) => {
       // updates on current players
       this.setState({ players: data.players });
+      // update the specific user 
+      if (this.state.user) {
+        var player; 
+        for (var i = 0; i < data.players.length; i++) {
+          player = data.players[i];
+          if (player.username.toLowerCase() === this.state.user.username) {
+            this.setState({ user: player });
+          }
+        }
+      }
     });
 
     socket.on('game state', (data) => {
