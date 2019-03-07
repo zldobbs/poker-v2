@@ -150,9 +150,9 @@ class App extends Component {
       });
   }
 
-  handleActionClick(action) {
+  handleActionClick(action, bet) {
     // handles a user's action (fold, check, or bet)
-    const play = { user: this.state.user, action: action };
+    const play = { user: this.state.user, action: action, bet: bet };
     axios.post(`${endpoint}/api/game/action`, play)
       .then((res) => {
         if (res.data.succ) {

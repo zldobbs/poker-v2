@@ -44,6 +44,7 @@ router.post('/ready', (req, res) => {
 // handle the user's action and update game accordingly 
 router.post('/action', (req, res) => {
     let data; 
+    console.log('user bets: ' + req.body.bet);
     switch(req.body.action) {
         case 0: 
             console.log(req.body.user.username + ' folds');
