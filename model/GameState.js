@@ -229,8 +229,25 @@ class GameState {
         // handles a user checking (or calling), updates game state accordingly
         // check if the correct user is attempting an action
         if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
-            // count increments since this is a valid play
-            this.count++;     
+            // need to check if the user can actually bet
+            if (this.currPlayer.pot >= this.bet) {
+                let index = (this.startIndex + this.count) % this.activePlayers.length;
+                if (this.activePlayers[index].username.toLowerCase() === this.currPlayer.username.toLowerCase()) {
+                    this.activePlayers[index].bet = this.bet;
+                    this.activePlayers[index].pot -= this.bet;
+                    this.pot += this.bet; 
+                    this.currPlayer = this.activePlayers[index];
+                }
+                else {
+                    // error
+                    console.log(this.activePlayers[index].username + ' is not ' + this.currPlayer.username);
+                }
+                // count increments since this is a valid play
+                this.count++; 
+            }
+            else {
+                console.log(this.currPlayer.username + ' can not check, insufficient funds');
+            }    
         }
         else {
             // unauthorized 
@@ -243,8 +260,6 @@ class GameState {
         // this 
         // handles a user betting (or raising), updates game state accordingly
         // FIXME player does not advance if the person betting is the first to play 
-        // FIXME user bet amounts are not being properly updated on frontend 
-        //       weird implementation is fucking everything up.. KISS dummy 
         if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
             // check if the bet is valid 
             if (bet <= this.currPlayer.pot && bet >= this.bet) {
@@ -254,8 +269,8 @@ class GameState {
                     this.activePlayers[index].bet = bet;
                     this.activePlayers[index].pot -= bet; 
                     this.bet = bet; 
+                    this.pot += this.bet; 
                     this.currPlayer = this.activePlayers[index];
-                    console.log(this.currPlayer.bet + ', ' + this.currPlayer.pot);
                     // count reset to 0, every active player gets a chance to play again 
                     this.startIndex = index;
                     this.count = 1; 

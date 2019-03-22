@@ -182,6 +182,12 @@ class App extends Component {
         for (var i = 0; i < data.players.length; i++) {
           player = data.players[i];
           if (player.username.toLowerCase() === this.state.user.username) {
+            /*
+              Hands are seperate from players on the backend,
+              need to keep them tied here though
+            */
+            player.c1 = this.state.user.c1;
+            player.c2 = this.state.user.c2; 
             this.setState({ user: player });
           }
         }

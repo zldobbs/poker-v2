@@ -33,7 +33,7 @@ class GameBoard extends Component {
                         <p>Pot: ${this.props.tableState.tablePot}</p>
                     </div>
                     <div className="col s6 center">
-                        <p>Current Bet: ${this.props.tableState.currentBet}</p>
+                        <p>Current Bet: ${this.props.tableState.tableBet}</p>
                     </div>
                 </div>
             );
