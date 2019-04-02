@@ -9,6 +9,8 @@ const Deck = require('./Deck');
 const Hand = require('./Hand');
 const Score = require('./Score');
 
+const initialBet = 100; 
+
 class GameState {
     constructor() {
         this.deck = new Deck;
@@ -111,6 +113,7 @@ class GameState {
                         this.updateTableState();
                     }
                     else {
+                        this.pot += this.activePlayers[i].bet; 
                         activePlayers.splice(i, 1);
                         this.activePlayers = activePlayers;
                     }
@@ -140,16 +143,6 @@ class GameState {
             return false; 
         }
         return true; 
-    }
-
-    getPot() {
-        // gets the tables pot
-        return this.pot;
-    }
-
-    setPot(pot) {
-        // sets the tables pot
-        this.pot = pot; 
     }
 
     toggleReady(username) {
@@ -205,6 +198,7 @@ class GameState {
         // count should not change here since active players will decrease 
         var index = (this.startIndex + this.count) % this.activePlayers.length;
         if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
+            this.pot += this.currPlayer.bet; 
             this.activePlayers.splice(index, 1); 
             console.log(this.activePlayers);
             if (this.activePlayers.length <= 1) {
@@ -234,8 +228,7 @@ class GameState {
                 let index = (this.startIndex + this.count) % this.activePlayers.length;
                 if (this.activePlayers[index].username.toLowerCase() === this.currPlayer.username.toLowerCase()) {
                     this.activePlayers[index].bet = this.bet;
-                    this.activePlayers[index].pot -= this.bet;
-                    this.pot += this.bet; 
+                    // this.activePlayers[index].pot -= this.bet;
                     this.currPlayer = this.activePlayers[index];
                 }
                 else {
@@ -267,9 +260,9 @@ class GameState {
                 let index = (this.startIndex + this.count) % this.activePlayers.length;
                 if (this.activePlayers[index].username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
                     this.activePlayers[index].bet = bet;
-                    this.activePlayers[index].pot -= bet; 
+                    // NOTE update pots at end of each turn to avoid duplicate add/subs
+                    // this.activePlayers[index].pot -= bet; 
                     this.bet = bet; 
-                    this.pot += this.bet; 
                     this.currPlayer = this.activePlayers[index];
                     // count reset to 0, every active player gets a chance to play again 
                     this.startIndex = index;
@@ -298,6 +291,7 @@ class GameState {
             // go to next step 
             this.step++; 
             this.count = 0;
+            this.updatePot();
             switch(this.step) {
                 case 0:
                     // pre flop
@@ -336,9 +330,18 @@ class GameState {
         }
     }
 
+    updatePot() {
+        this.bet = initialBet; 
+        for (var i = 0; i < this.activePlayers.length; i++) {
+            this.activePlayers[i].pot -= this.activePlayers[i].bet; 
+            this.pot += this.activePlayers[i].bet; 
+            this.activePlayers[i].bet = 0; 
+        }
+    }
+
     resetBet() {
         // resets the tables bet and pot
-        this.bet = 100;
+        this.bet = initialBet;
         this.pot = 0;
     }
 
@@ -383,7 +386,6 @@ class GameState {
 
     flop() {
         this.step = 1; 
-        this.resetBet();
         this.tableCards.push(this.deck.draw());
         this.tableCards.push(this.deck.draw());
         this.tableCards.push(this.deck.draw());
@@ -428,11 +430,18 @@ class GameState {
             }
         }
         this.winners = score.scoreGame(activeHands, this.tableCards);
+        // award the winners 
+        let award = Math.floor(this.pot / this.winners.length);
         this.currPlayer = null;
-         // reset players status to not playing
-         for (var i = 0; i < this.players.length; i++) {
+        // reset players status to not playing
+        for (var i = 0; i < this.players.length; i++) {
             this.players[i].playing = false; 
-            username = this.players[i].username; 
+            username = this.players[i].username;
+            for (var j = 0; j < this.winners.length; j++) {
+                if (username.toLowerCase() === this.winners[j].hand.username.toLowerCase()) {
+                    this.players[i].pot += award; 
+                }
+            } 
             this.sockets[username].emit('ready update', { ready: false });
         }
         this.step = -1;

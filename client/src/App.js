@@ -186,8 +186,8 @@ class App extends Component {
           dealer: data.game.dealer,
           currPlayer: data.game.currPlayer,
           tableCards: data.game.tableCards,
-          tablePot: data.game.bet,
-          tableBet: data.game.pot,
+          tablePot: data.game.pot,
+          tableBet: data.game.bet,
           step: data.game.step
         }
       });
