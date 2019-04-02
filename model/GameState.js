@@ -114,6 +114,7 @@ class GameState {
                     }
                     else {
                         this.pot += this.activePlayers[i].bet; 
+                        this.updatePlayerBank(this.activePlayers[i]);
                         activePlayers.splice(i, 1);
                         this.activePlayers = activePlayers;
                     }
@@ -199,6 +200,7 @@ class GameState {
         var index = (this.startIndex + this.count) % this.activePlayers.length;
         if (user.username.toLowerCase() == this.currPlayer.username.toLowerCase()) {
             this.pot += this.currPlayer.bet; 
+            this.updatePlayerBank(this.currPlayer);
             this.activePlayers.splice(index, 1); 
             console.log(this.activePlayers);
             if (this.activePlayers.length <= 1) {
@@ -331,11 +333,22 @@ class GameState {
     }
 
     updatePot() {
-        this.bet = initialBet; 
+        this.bet = 0; 
         for (var i = 0; i < this.activePlayers.length; i++) {
             this.activePlayers[i].pot -= this.activePlayers[i].bet; 
             this.pot += this.activePlayers[i].bet; 
             this.activePlayers[i].bet = 0; 
+            this.updatePlayerBank(this.activePlayers[i]);
+        }
+    }
+
+    updatePlayerBank(user) {
+        for (var i = 0; i < this.players.length; i++) {
+            if (this.players[i].username.toLowerCase() === user.username.toLowerCase()) {
+                this.players[i].bet = user.bet;
+                this.players[i].pot = user.pot;
+                return; 
+            }
         }
     }
 
